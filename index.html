@@ -23,6 +23,9 @@
       --green-border: #86efac;
       --yellow: #b45309;
       --red: #b91c1c;
+      --gold: #b45309;
+      --gold-bg: #fffbeb;
+      --gold-border: #fde68a;
     }
     * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
     body { background-color: var(--bg); color: var(--text); margin: 0; padding: 10px; }
@@ -41,7 +44,7 @@
       border-radius: 9999px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;
     }
 
-    /* Estadísticas / Filtros de 1 toque */
+    /* Estadísticas */
     .stats-grid {
       display: grid; grid-template-columns: repeat(3, 1fr);
       gap: 6px; margin-bottom: 10px;
@@ -105,12 +108,13 @@
       padding: 8px 6px; border: 1px solid var(--border); border-radius: 6px; font-size: 0.8rem; background: white;
     }
     .toolbar-row-actions {
-      display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 6px; width: 100%;
+      display: grid; grid-template-columns: 1.2fr 1fr 1fr 1.2fr; gap: 6px; width: 100%;
     }
     .btn-action {
       padding: 8px 6px; border: none; border-radius: 6px; font-size: 0.78rem; font-weight: 600;
       color: white; text-align: center; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 4px;
     }
+    .btn-add { background: #7c3aed; }
     .btn-wa { background: #16a34a; }
     .btn-backup { background: #0284c7; }
     .btn-restore { background: #475569; }
@@ -120,42 +124,52 @@
       font-size: 1.05rem; font-weight: bold; color: #1e3a8a; margin: 18px 0 10px 0;
       display: flex; align-items: center; gap: 6px; border-bottom: 2px solid #bfdbfe; padding-bottom: 4px;
     }
+    .section-title.homenaje {
+      color: #92400e; border-color: #fde68a;
+    }
     .family-card {
       background: var(--card); border: 1px solid var(--border); border-radius: 10px;
-      margin-bottom: 14px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      margin-bottom: 12px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+    .family-card.homenaje {
+      border: 2px solid #f59e0b; background: #fffdf5;
     }
     .family-card.completed {
       border-color: var(--green-border); background-color: #fafdfb;
     }
     
     .family-head {
-      background: #f1f5f9; padding: 10px 12px; border-bottom: 1px solid var(--border);
-      display: flex; flex-direction: column; gap: 8px;
+      background: #f1f5f9; padding: 8px 10px; border-bottom: 1px solid var(--border);
+      display: flex; flex-direction: column; gap: 6px;
+    }
+    .family-head.homenaje {
+      background: #fef3c7; border-bottom: 1px solid #fde68a;
     }
     .family-title-block {
       display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 4px;
     }
-    .family-name { font-weight: 700; font-size: 0.95rem; color: #0f172a; }
+    .family-name { font-weight: 700; font-size: 0.92rem; color: #0f172a; }
     .badge {
       display: inline-block; padding: 2px 6px; font-size: 0.68rem; font-weight: 700; border-radius: 4px;
       background: #e2e8f0; color: #334155;
     }
     .badge-g { background: #dbeafe; color: #1e40af; }
+    .badge-gold { background: #fef08a; color: #854d0e; }
     
     .family-actions-block {
       display: flex; align-items: center; gap: 6px; width: 100%;
     }
     .family-note-input {
-      flex: 1; padding: 7px 10px; font-size: 0.8rem; border-radius: 6px; border: 1px solid #94a3b8;
+      flex: 1; padding: 6px 8px; font-size: 0.8rem; border-radius: 6px; border: 1px solid #94a3b8;
       background: #ffffff; font-weight: 500; color: #1e3a8a;
     }
     .btn-fam-toggle {
       background: white; border: 1px solid #cbd5e1; border-radius: 6px;
-      padding: 7px 10px; font-size: 0.76rem; font-weight: 600; cursor: pointer; color: #334155; white-space: nowrap;
+      padding: 6px 10px; font-size: 0.74rem; font-weight: 600; cursor: pointer; color: #334155; white-space: nowrap;
     }
 
-    /* Integrantes: Estructura Vertical y Limpia para Celular */
-    .member-list { padding: 4px 8px; }
+    /* Integrantes */
+    .member-list { padding: 2px 8px; }
     .member-card-item {
       display: flex; flex-direction: column; gap: 6px;
       padding: 10px 8px; border-bottom: 1px dashed #e2e8f0;
@@ -167,7 +181,6 @@
     .member-card-item.status-maybe { border-left: 4px solid var(--yellow); }
     .member-card-item.status-no { border-left: 4px solid var(--red); }
 
-    /* Fila superior: Checkbox + Nombre y Rol */
     .member-top-row {
       display: flex; align-items: flex-start; gap: 10px; width: 100%;
     }
@@ -175,10 +188,9 @@
       width: 20px; height: 20px; cursor: pointer; margin-top: 2px; flex-shrink: 0;
     }
     .member-name-block { flex: 1; min-width: 0; }
-    .member-name { font-weight: 700; font-size: 0.92rem; color: #0f172a; line-height: 1.25; }
-    .member-sub { font-size: 0.74rem; color: var(--text-muted); margin-top: 2px; }
+    .member-name { font-weight: 700; font-size: 0.88rem; color: #0f172a; line-height: 1.25; }
+    .member-sub { font-size: 0.72rem; color: var(--text-muted); margin-top: 2px; }
 
-    /* Fila inferior: Teléfonos a la izquierda y Selector a la derecha */
     .member-bottom-row {
       display: flex; flex-direction: column; gap: 6px; padding-left: 30px;
     }
@@ -188,36 +200,62 @@
       }
     }
 
-    .phones-container { display: flex; flex-direction: column; gap: 4px; }
-    .phone-item { display: flex; align-items: center; gap: 5px; flex-wrap: wrap; }
+    .phones-container { display: flex; flex-direction: column; gap: 3px; }
+    .phone-item { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
     .phone-tag {
-      font-size: 0.65rem; font-weight: 700; padding: 2px 5px; border-radius: 3px;
+      font-size: 0.65rem; font-weight: 700; padding: 1px 4px; border-radius: 3px;
       background: #e2e8f0; color: #475569;
     }
     .phone-tag.primary { background: #dbeafe; color: #1e40af; }
     .phone-tag.alt { background: #fef3c7; color: #92400e; }
-    .phone-number { font-size: 0.82rem; font-weight: 600; color: #1e293b; }
+    .phone-number { font-size: 0.78rem; font-weight: 600; color: #1e293b; }
     
     .btn-icon {
       display: inline-flex; align-items: center; justify-content: center;
-      width: 26px; height: 26px; border-radius: 5px; font-size: 0.75rem; text-decoration: none;
+      width: 22px; height: 22px; border-radius: 4px; font-size: 0.7rem; text-decoration: none;
       color: white; border: none; cursor: pointer;
     }
     .btn-call { background: #0284c7; }
     .btn-wapp { background: #16a34a; }
 
+    .actions-box { display: flex; align-items: center; gap: 6px; width: 100%; }
     .status-select {
-      padding: 6px 10px; font-size: 0.8rem; border-radius: 6px; border: 1px solid var(--border);
-      background: white; font-weight: 600; min-width: 140px; width: 100%;
+      flex: 1; padding: 5px 6px; font-size: 0.78rem; border-radius: 5px; border: 1px solid var(--border);
+      background: white; font-weight: 600;
     }
-    @media (min-width: 520px) {
-      .status-select { width: auto; }
+
+    /* Modal para agregar personas */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 200;
+      display: none; align-items: center; justify-content: center; padding: 12px;
     }
+    .modal-box {
+      background: white; width: 100%; max-width: 440px; border-radius: 12px;
+      padding: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); max-height: 90vh; overflow-y: auto;
+    }
+    .modal-title { font-size: 1.1rem; font-weight: 700; color: var(--primary); margin-bottom: 12px; }
+    .form-group { display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px; }
+    .form-group label { font-size: 0.78rem; font-weight: 600; color: var(--text-muted); }
+    .form-group input, .form-group select {
+      padding: 8px 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 0.85rem;
+    }
+    .modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 14px; }
+    .btn-cancel { background: #94a3b8; }
 
     #toast {
       position: fixed; bottom: 12px; right: 12px; background: #0f172a; color: white;
       padding: 6px 12px; border-radius: 6px; font-size: 0.75rem; display: none; z-index: 100;
       box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+    }
+
+    @media (min-width: 768px) {
+      .family-head { flex-direction: row; justify-content: space-between; }
+      .family-actions-block { width: auto; }
+      .family-note-input { width: 260px; }
+      .toolbar { flex-direction: row; }
+      .toolbar-row-top { width: auto; flex: 1; }
+      .toolbar-row-filters { width: auto; display: flex; }
+      .toolbar-row-actions { width: auto; display: flex; }
     }
   </style>
 </head>
@@ -226,14 +264,14 @@
   <header>
     <div>
       <h1>Despedida Hno. William Mercado y Esposa</h1>
-      <p>Control de Asistencia y Aportes Familiares (En vivo)</p>
+      <p>Control de Asistencia y Aportes Familiares (Sincronizado)</p>
     </div>
     <div class="cloud-status" id="cloud-indicator">
       <span style="font-size:10px;">●</span> Conectando...
     </div>
   </header>
 
-  <!-- Métricas Interactivas (Filtros rápidos con 1 toque) -->
+  <!-- Métricas Interactivas -->
   <div class="stats-grid">
     <div class="stat-box active" id="btn-filtro-ALL" onclick="setQuickFilter('ALL')">
       <div class="stat-val" id="st-fam">0</div>
@@ -310,6 +348,7 @@
       </select>
     </div>
     <div class="toolbar-row-actions">
+      <button class="btn-action btn-add" onclick="openAddModal()">➕ Agregar</button>
       <button class="btn-action btn-wa" onclick="copyWhatsAppSummary()">📱 WhatsApp</button>
       <button class="btn-action btn-backup" onclick="exportData()">💾 Respaldo</button>
       <label class="btn-action btn-restore" style="cursor:pointer;">
@@ -319,12 +358,56 @@
     </div>
   </div>
 
-  <!-- Listado de Familias -->
+  <!-- Sección Especial de los Homenajeados -->
+  <div class="section-title homenaje">🌟 Homenajeados Especiales</div>
+  <div id="homenajeados-content"></div>
+
+  <!-- Listado de Familias de la Congregación -->
+  <div class="section-title">🏠 Familias de la Congregación</div>
   <div id="main-content"></div>
 
   <!-- Sección de Visitantes -->
-  <div class="section-title">👥 Sección Aparte: Visitantes y Estudiantes</div>
+  <div class="section-title">👥 Visitantes y Otros Invitados</div>
   <div id="visitors-content"></div>
+</div>
+
+<!-- Modal para agregar nuevas personas -->
+<div class="modal-overlay" id="addModal">
+  <div class="modal-box">
+    <div class="modal-title">➕ Agregar Persona o Invitado</div>
+    <div class="form-group">
+      <label>Categoría / Ubicación:</label>
+      <select id="new-cat" onchange="toggleCategoryInput()">
+        <option value="EXISTENTE">Añadir a una familia existente</option>
+        <option value="NUEVA_FAMILIA">Crear nueva familia (Congregación)</option>
+        <option value="VISITANTE">Visitante / Invitado especial</option>
+      </select>
+    </div>
+    <div class="form-group" id="group-fam-existente">
+      <label>Seleccionar Familia Existente:</label>
+      <select id="new-fam-select"></select>
+    </div>
+    <div class="form-group" id="group-fam-nueva" style="display:none;">
+      <label>Nombre de la Nueva Familia (Ej: Perez Martinez):</label>
+      <input type="text" id="new-fam-name" placeholder="Apellido(s) de la familia">
+    </div>
+    <div class="form-group">
+      <label>Nombre y Apellidos de la Persona:</label>
+      <input type="text" id="new-person-name" placeholder="Ej: Juan Pérez">
+    </div>
+    <div class="form-group">
+      <label>Parentesco / Rol:</label>
+      <input type="text" id="new-person-role" placeholder="Ej: Hijo, Esposa, Publicador, Visitante...">
+    </div>
+    <div class="form-group">
+      <label>Teléfono Celular (Opcional):</label>
+      <input type="tel" id="new-person-tel" placeholder="Ej: 3001234567">
+    </div>
+    <div class="modal-actions">
+      <button class="btn-action btn-cancel" onclick="closeAddModal()">Cancelar</button>
+      <button class="btn-action btn-add" onclick="saveNewPerson()">Guardar en la lista</button>
+    </div>
+  </div>
 </div>
 
 <div id="toast">Guardado en Firebase</div>
@@ -379,8 +462,19 @@ try {
 }
 
 // ==========================================
-// 2. CONGREGACIÓN Y TELÉFONOS
+// 2. CONGREGACIÓN Y HOMENAJEADOS
 // ==========================================
+const HOMENAJEADOS = [
+  { id: "H_HOMENAJE", nombre: "Mercado (Homenajeados)", grupo: "Grupo 5", miembros: [
+    { id: "P0051", nombre: "William Mercado", rol: "ANC, PR (Homenajeado)", parentesco: "Esposo",
+      telefonos: [{ tipo: "Principal", num: "3136346795", nota: "Móvil" }]
+    },
+    { id: "P0052", nombre: "Saray Mercado", rol: "PR (Homenajeada)", parentesco: "Esposa",
+      telefonos: [{ tipo: "Principal", num: "3135327141", nota: "Móvil" }]
+    }
+  ]}
+];
+
 const FAMILIAS = [
   { id: "H023", nombre: "Arteaga Rangel", grupo: "Grupo 1", miembros: [
     { id: "P0034", nombre: "Oscar Enrique Arteaga Mendez", rol: "ANC, PR", parentesco: "Esposo",
@@ -806,12 +900,65 @@ function showToast() {
   setTimeout(() => t.style.display = 'none', 1000);
 }
 
+function getAllFamilies() {
+  // Une las familias fijas con cualquier familia/persona agregada dinámicamente
+  const customRecords = appState._custom_records || [];
+  
+  // Clona para no mutar el array original
+  const allFam = JSON.parse(JSON.stringify(FAMILIAS));
+
+  customRecords.forEach(c => {
+    if (c.cat === 'EXISTENTE') {
+      const fam = allFam.find(f => f.id === c.targetFamId);
+      if (fam) {
+        fam.miembros.push(c.member);
+      }
+    } else if (c.cat === 'NUEVA_FAMILIA') {
+      const existingNewFam = allFam.find(f => f.id === c.famId);
+      if (existingNewFam) {
+        existingNewFam.miembros.push(c.member);
+      } else {
+        allFam.push({
+          id: c.famId,
+          nombre: c.famNombre,
+          grupo: c.grupo || "Personalizado",
+          miembros: [c.member]
+        });
+      }
+    }
+  });
+
+  // Ordenar alfabéticamente
+  return allFam.sort((a,b) => a.nombre.localeCompare(b.nombre));
+}
+
+function getAllVisitors() {
+  const customRecords = appState._custom_records || [];
+  const allVis = JSON.parse(JSON.stringify(VISITANTES));
+
+  customRecords.forEach(c => {
+    if (c.cat === 'VISITANTE') {
+      allVis.push({
+        id: c.famId,
+        nombre: c.famNombre,
+        grupo: "-",
+        miembros: [c.member]
+      });
+    }
+  });
+  return allVis;
+}
+
 function updateMetricsAndAnalytics() {
-  let totalFam = FAMILIAS.length;
+  const allFamilies = getAllFamilies();
+  const allVisitors = getAllVisitors();
+  const combined = [...HOMENAJEADOS, ...allFamilies, ...allVisitors];
+
+  let totalFam = HOMENAJEADOS.length + allFamilies.length;
   let totalPeople = 0, contacted = 0, yes = 0, maybe = 0, no = 0;
   let aportesEncontrados = [];
 
-  FAMILIAS.forEach(f => {
+  combined.forEach(f => {
     const famAporte = (appState[f.id] && appState[f.id].familyNote) ? appState[f.id].familyNote.trim() : '';
     if (famAporte) {
       aportesEncontrados.push(`<b>Fam. ${f.nombre}:</b> ${famAporte}`);
@@ -861,12 +1008,24 @@ function updateMetricsAndAnalytics() {
 function renderApp() {
   const q = document.getElementById('search').value.toLowerCase().trim();
   const grp = document.getElementById('filter-group').value;
+  const homenajeDiv = document.getElementById('homenajeados-content');
   const mainDiv = document.getElementById('main-content');
   const visDiv = document.getElementById('visitors-content');
+  
+  homenajeDiv.innerHTML = '';
   mainDiv.innerHTML = '';
   visDiv.innerHTML = '';
 
-  const filtered = FAMILIAS.filter(f => {
+  const allFamilies = getAllFamilies();
+  const allVisitors = getAllVisitors();
+
+  // 1. Render Homenajeados
+  HOMENAJEADOS.forEach(f => {
+    homenajeDiv.appendChild(createCard(f, q, false, true));
+  });
+
+  // 2. Render Familias Filtradas
+  const filtered = allFamilies.filter(f => {
     const famNote = (appState[f.id] && appState[f.id].familyNote) ? appState[f.id].familyNote.toLowerCase() : '';
     const mGrp = (grp === 'ALL' || f.grupo === grp);
 
@@ -899,8 +1058,8 @@ function renderApp() {
 
   filtered.forEach(f => mainDiv.appendChild(createCard(f, q)));
 
-  // Visitantes
-  const filteredVis = VISITANTES.filter(f => {
+  // 3. Render Visitantes
+  const filteredVis = allVisitors.filter(f => {
     return f.nombre.toLowerCase().includes(q) || f.miembros.some(m => {
       return m.nombre.toLowerCase().includes(q) || (m.telefonos && m.telefonos.some(t => t.num.includes(q)));
     });
@@ -910,27 +1069,27 @@ function renderApp() {
   updateMetricsAndAnalytics();
 }
 
-function createCard(fam, q, isVisitor = false) {
+function createCard(fam, q, isVisitor = false, isHomenaje = false) {
   const card = document.createElement('div');
   const allChecked = fam.miembros.every(m => (appState[m.id] && appState[m.id].contacted));
-  card.className = `family-card ${allChecked ? 'completed' : ''}`;
+  card.className = `family-card ${isHomenaje ? 'homenaje' : ''} ${allChecked ? 'completed' : ''}`;
 
   const currentFamilyNote = (appState[fam.id] && appState[fam.id].familyNote) ? appState[fam.id].familyNote : '';
 
   const head = document.createElement('div');
-  head.className = 'family-head';
+  head.className = `family-head ${isHomenaje ? 'homenaje' : ''}`;
   head.innerHTML = `
     <div class="family-title-block">
-      <span class="family-name">${isVisitor ? '👤' : '🏠'} Familia ${fam.nombre}</span>
+      <span class="family-name">${isHomenaje ? '⭐' : (isVisitor ? '👤' : '🏠')} Familia ${fam.nombre}</span>
       <div>
-        <span class="badge badge-g">${fam.grupo}</span>
+        <span class="badge ${isHomenaje ? 'badge-gold' : 'badge-g'}">${fam.grupo}</span>
         <span class="badge">${fam.miembros.length} ${fam.miembros.length === 1 ? 'persona' : 'personas'}</span>
       </div>
     </div>
     <div class="family-actions-block">
-      <input type="text" class="family-note-input" placeholder="🍲 Aporte familiar..." 
+      <input type="text" class="family-note-input" placeholder="${isHomenaje ? 'Nota especial de homenaje...' : '🍲 Aporte familiar...'}" 
              value="${currentFamilyNote}" onchange="setFamilyNote('${fam.id}', this.value)">
-      <button class="btn-fam-toggle" onclick="toggleFamily('${fam.id}', ${!allChecked}, ${isVisitor})">
+      <button class="btn-fam-toggle" onclick="toggleFamily('${fam.id}', ${!allChecked})">
         ${allChecked ? 'Desmarcar' : '✓ Avisar a todos'}
       </button>
     </div>
@@ -958,7 +1117,6 @@ function createCard(fam, q, isVisitor = false) {
     const item = document.createElement('div');
     item.className = `member-card-item ${s.contacted ? 'is-contacted' : ''} status-${s.status || 'pending'}`;
 
-    // Construcción de la lista de teléfonos
     let phonesHtml = '';
     if (m.telefonos && m.telefonos.length > 0) {
       phonesHtml = '<div class="phones-container">';
@@ -1010,15 +1168,103 @@ function createCard(fam, q, isVisitor = false) {
   return card;
 }
 
+// Modal y Gestión de Nuevas Personas
+function openAddModal() {
+  const sel = document.getElementById('new-fam-select');
+  sel.innerHTML = '';
+  const allFam = getAllFamilies();
+  allFam.forEach(f => {
+    const opt = document.createElement('option');
+    opt.value = f.id;
+    opt.innerText = `Familia ${f.nombre} (${f.grupo})`;
+    sel.appendChild(opt);
+  });
+  document.getElementById('addModal').style.display = 'flex';
+}
+
+function closeAddModal() {
+  document.getElementById('addModal').style.display = 'none';
+}
+
+function toggleCategoryInput() {
+  const cat = document.getElementById('new-cat').value;
+  document.getElementById('group-fam-existente').style.display = (cat === 'EXISTENTE') ? 'flex' : 'none';
+  document.getElementById('group-fam-nueva').style.display = (cat === 'NUEVA_FAMILIA' || cat === 'VISITANTE') ? 'flex' : 'none';
+}
+
+function saveNewPerson() {
+  const cat = document.getElementById('new-cat').value;
+  const personName = document.getElementById('new-person-name').value.trim();
+  const personRole = document.getElementById('new-person-role').value.trim() || 'Invitado';
+  const personTel = document.getElementById('new-person-tel').value.trim();
+
+  if (!personName) {
+    alert("Por favor escribe el nombre de la persona.");
+    return;
+  }
+
+  const customRecords = appState._custom_records || [];
+  const newMemberId = 'CUST_P_' + Date.now();
+
+  const newMemberObj = {
+    id: newMemberId,
+    nombre: personName,
+    rol: personRole,
+    parentesco: personRole,
+    telefonos: personTel ? [{ tipo: "Principal", num: personTel, nota: "Móvil" }] : []
+  };
+
+  let recordPayload = null;
+
+  if (cat === 'EXISTENTE') {
+    const targetFamId = document.getElementById('new-fam-select').value;
+    recordPayload = {
+      cat: 'EXISTENTE',
+      targetFamId: targetFamId,
+      member: newMemberObj
+    };
+  } else if (cat === 'NUEVA_FAMILIA') {
+    const famName = document.getElementById('new-fam-name').value.trim() || personName;
+    const newFamId = 'CUST_H_' + Date.now();
+    recordPayload = {
+      cat: 'NUEVA_FAMILIA',
+      famId: newFamId,
+      famNombre: famName,
+      grupo: "Nuevo",
+      member: newMemberObj
+    };
+  } else {
+    // Visitante
+    const famName = document.getElementById('new-fam-name').value.trim() || personName;
+    const newFamId = 'CUST_VIS_' + Date.now();
+    recordPayload = {
+      cat: 'VISITANTE',
+      famId: newFamId,
+      famNombre: famName,
+      member: newMemberObj
+    };
+  }
+
+  customRecords.push(recordPayload);
+  updateFieldInFirestore('_custom_records', customRecords);
+
+  // Limpiar y cerrar
+  document.getElementById('new-person-name').value = '';
+  document.getElementById('new-person-tel').value = '';
+  document.getElementById('new-fam-name').value = '';
+  closeAddModal();
+  renderApp();
+}
+
 function togglePerson(id, val) {
   const current = appState[id] || { status: 'pending' };
   current.contacted = val;
   updateFieldInFirestore(id, current);
 }
 
-function toggleFamily(fId, val, isVisitor) {
-  const source = isVisitor ? VISITANTES : FAMILIAS;
-  const fam = source.find(f => f.id === fId);
+function toggleFamily(fId, val) {
+  const allFamilies = [...HOMENAJEADOS, ...getAllFamilies(), ...getAllVisitors()];
+  const fam = allFamilies.find(f => f.id === fId);
   if (!fam) return;
 
   const batchUpdates = {};
@@ -1057,7 +1303,9 @@ function copyWhatsAppSummary() {
   let familyReports = [];
   let aportesList = [];
 
-  FAMILIAS.forEach(f => {
+  const allCombined = [...HOMENAJEADOS, ...getAllFamilies(), ...getAllVisitors()];
+
+  allCombined.forEach(f => {
     const attendingMembers = f.miembros.filter(m => (appState[m.id] && appState[m.id].status === 'yes'));
     const famAporte = (appState[f.id] && appState[f.id].familyNote) ? appState[f.id].familyNote.trim() : '';
 
