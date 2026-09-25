@@ -182,7 +182,10 @@
     .member-card-item.status-no { border-left: 4px solid var(--red); }
 
     .member-top-row {
-      display: flex; align-items: flex-start; gap: 10px; width: 100%;
+      display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; width: 100%;
+    }
+    .member-main-info {
+      display: flex; align-items: flex-start; gap: 10px; flex: 1; min-width: 0;
     }
     .member-check-input {
       width: 20px; height: 20px; cursor: pointer; margin-top: 2px; flex-shrink: 0;
@@ -190,6 +193,18 @@
     .member-name-block { flex: 1; min-width: 0; }
     .member-name { font-weight: 700; font-size: 0.88rem; color: #0f172a; line-height: 1.25; }
     .member-sub { font-size: 0.72rem; color: var(--text-muted); margin-top: 2px; }
+
+    /* Botones de acción rápida: Editar y Eliminar */
+    .member-quick-tools {
+      display: flex; align-items: center; gap: 4px; flex-shrink: 0;
+    }
+    .btn-tool {
+      background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 4px;
+      width: 24px; height: 24px; display: inline-flex; align-items: center; justify-content: center;
+      font-size: 0.75rem; cursor: pointer; color: #475569;
+    }
+    .btn-tool:hover { background: #e2e8f0; }
+    .btn-tool.del:hover { background: #fee2e2; color: #b91c1c; border-color: #fca5a5; }
 
     .member-bottom-row {
       display: flex; flex-direction: column; gap: 6px; padding-left: 30px;
@@ -224,7 +239,7 @@
       background: white; font-weight: 600;
     }
 
-    /* Modal para agregar personas */
+    /* Modales */
     .modal-overlay {
       position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 200;
       display: none; align-items: center; justify-content: center; padding: 12px;
@@ -358,15 +373,15 @@
     </div>
   </div>
 
-  <!-- Sección Especial de los Homenajeados -->
+  <!-- Homenajeados -->
   <div class="section-title homenaje">🌟 Homenajeados Especiales</div>
   <div id="homenajeados-content"></div>
 
-  <!-- Listado de Familias de la Congregación -->
+  <!-- Familias de la Congregación -->
   <div class="section-title">🏠 Familias de la Congregación</div>
   <div id="main-content"></div>
 
-  <!-- Sección de Visitantes -->
+  <!-- Visitantes -->
   <div class="section-title">👥 Visitantes y Otros Invitados</div>
   <div id="visitors-content"></div>
 </div>
@@ -405,7 +420,31 @@
     </div>
     <div class="modal-actions">
       <button class="btn-action btn-cancel" onclick="closeAddModal()">Cancelar</button>
-      <button class="btn-action btn-add" onclick="saveNewPerson()">Guardar en la lista</button>
+      <button class="btn-action btn-add" onclick="saveNewPerson()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para editar personas existentes -->
+<div class="modal-overlay" id="editModal">
+  <div class="modal-box">
+    <div class="modal-title">✏️ Editar Datos de la Persona</div>
+    <input type="hidden" id="edit-person-id">
+    <div class="form-group">
+      <label>Nombre Completo:</label>
+      <input type="text" id="edit-person-name">
+    </div>
+    <div class="form-group">
+      <label>Parentesco / Rol:</label>
+      <input type="text" id="edit-person-role">
+    </div>
+    <div class="form-group">
+      <label>Teléfono Principal:</label>
+      <input type="tel" id="edit-person-tel">
+    </div>
+    <div class="modal-actions">
+      <button class="btn-action btn-cancel" onclick="closeEditModal()">Cancelar</button>
+      <button class="btn-action btn-backup" onclick="saveEditedPerson()">Guardar Cambios</button>
     </div>
   </div>
 </div>
@@ -865,7 +904,7 @@ const VISITANTES = [
 ];
 
 // ==========================================
-// 3. SINCRONIZACIÓN Y LÓGICA DE ACTUALIZACIÓN
+// 3. LÓGICA DE OVERRIDES (EDICIÓN Y ELIMINACIÓN)
 // ==========================================
 function updateFieldInFirestore(key, value) {
   appState[key] = value;
@@ -900,19 +939,28 @@ function showToast() {
   setTimeout(() => t.style.display = 'none', 1000);
 }
 
+function applyPersonOverrides(member) {
+  const overrides = (appState._person_overrides && appState._person_overrides[member.id]) || null;
+  if (!overrides) return member;
+  if (overrides.deleted) return null; // Persona eliminada
+
+  return {
+    ...member,
+    nombre: overrides.nombre !== undefined ? overrides.nombre : member.nombre,
+    rol: overrides.rol !== undefined ? overrides.rol : member.rol,
+    parentesco: overrides.parentesco !== undefined ? overrides.parentesco : member.parentesco,
+    telefonos: overrides.telefonos !== undefined ? overrides.telefonos : member.telefonos
+  };
+}
+
 function getAllFamilies() {
-  // Une las familias fijas con cualquier familia/persona agregada dinámicamente
   const customRecords = appState._custom_records || [];
-  
-  // Clona para no mutar el array original
   const allFam = JSON.parse(JSON.stringify(FAMILIAS));
 
   customRecords.forEach(c => {
     if (c.cat === 'EXISTENTE') {
       const fam = allFam.find(f => f.id === c.targetFamId);
-      if (fam) {
-        fam.miembros.push(c.member);
-      }
+      if (fam) fam.miembros.push(c.member);
     } else if (c.cat === 'NUEVA_FAMILIA') {
       const existingNewFam = allFam.find(f => f.id === c.famId);
       if (existingNewFam) {
@@ -921,15 +969,19 @@ function getAllFamilies() {
         allFam.push({
           id: c.famId,
           nombre: c.famNombre,
-          grupo: c.grupo || "Personalizado",
+          grupo: c.grupo || "Nuevo",
           miembros: [c.member]
         });
       }
     }
   });
 
-  // Ordenar alfabéticamente
-  return allFam.sort((a,b) => a.nombre.localeCompare(b.nombre));
+  // Aplicar ediciones y filtrado de eliminados
+  allFam.forEach(fam => {
+    fam.miembros = fam.miembros.map(m => applyPersonOverrides(m)).filter(m => m !== null);
+  });
+
+  return allFam.filter(f => f.miembros.length > 0).sort((a,b) => a.nombre.localeCompare(b.nombre));
 }
 
 function getAllVisitors() {
@@ -946,15 +998,29 @@ function getAllVisitors() {
       });
     }
   });
-  return allVis;
+
+  allVis.forEach(fam => {
+    fam.miembros = fam.miembros.map(m => applyPersonOverrides(m)).filter(m => m !== null);
+  });
+
+  return allVis.filter(f => f.miembros.length > 0);
+}
+
+function getHomenajeadosProcessed() {
+  const allHom = JSON.parse(JSON.stringify(HOMENAJEADOS));
+  allHom.forEach(fam => {
+    fam.miembros = fam.miembros.map(m => applyPersonOverrides(m)).filter(m => m !== null);
+  });
+  return allHom;
 }
 
 function updateMetricsAndAnalytics() {
+  const allHomenajeados = getHomenajeadosProcessed();
   const allFamilies = getAllFamilies();
   const allVisitors = getAllVisitors();
-  const combined = [...HOMENAJEADOS, ...allFamilies, ...allVisitors];
+  const combined = [...allHomenajeados, ...allFamilies, ...allVisitors];
 
-  let totalFam = HOMENAJEADOS.length + allFamilies.length;
+  let totalFam = allHomenajeados.length + allFamilies.length;
   let totalPeople = 0, contacted = 0, yes = 0, maybe = 0, no = 0;
   let aportesEncontrados = [];
 
@@ -987,15 +1053,15 @@ function updateMetricsAndAnalytics() {
   document.getElementById('prog-pct-contacted').innerText = pctContacted + '%';
   document.getElementById('prog-pct-confirmed').innerText = pctConfirmed + '%';
 
-  const wYes = (yes / totalPeople) * 100;
-  const wMaybe = (maybe / totalPeople) * 100;
-  const wNo = (no / totalPeople) * 100;
-  const wPending = 100 - (wYes + wMaybe + wNo);
+  const wYes = totalPeople > 0 ? (yes / totalPeople) * 100 : 0;
+  const wMaybe = totalPeople > 0 ? (maybe / totalPeople) * 100 : 0;
+  const wNo = totalPeople > 0 ? (no / totalPeople) * 100 : 0;
+  const wPending = Math.max(0, 100 - (wYes + wMaybe + wNo));
 
   document.getElementById('bar-yes').style.width = wYes + '%';
   document.getElementById('bar-maybe').style.width = wMaybe + '%';
   document.getElementById('bar-no').style.width = wNo + '%';
-  document.getElementById('bar-pending').style.width = Math.max(0, wPending) + '%';
+  document.getElementById('bar-pending').style.width = wPending + '%';
 
   const badgesContainer = document.getElementById('lista-aportes-badges');
   if (aportesEncontrados.length > 0) {
@@ -1016,15 +1082,16 @@ function renderApp() {
   mainDiv.innerHTML = '';
   visDiv.innerHTML = '';
 
+  const allHomenajeados = getHomenajeadosProcessed();
   const allFamilies = getAllFamilies();
   const allVisitors = getAllVisitors();
 
-  // 1. Render Homenajeados
-  HOMENAJEADOS.forEach(f => {
+  // 1. Homenajeados
+  allHomenajeados.forEach(f => {
     homenajeDiv.appendChild(createCard(f, q, false, true));
   });
 
-  // 2. Render Familias Filtradas
+  // 2. Familias Filtradas
   const filtered = allFamilies.filter(f => {
     const famNote = (appState[f.id] && appState[f.id].familyNote) ? appState[f.id].familyNote.toLowerCase() : '';
     const mGrp = (grp === 'ALL' || f.grupo === grp);
@@ -1058,7 +1125,7 @@ function renderApp() {
 
   filtered.forEach(f => mainDiv.appendChild(createCard(f, q)));
 
-  // 3. Render Visitantes
+  // 3. Visitantes
   const filteredVis = allVisitors.filter(f => {
     return f.nombre.toLowerCase().includes(q) || f.miembros.some(m => {
       return m.nombre.toLowerCase().includes(q) || (m.telefonos && m.telefonos.some(t => t.num.includes(q)));
@@ -1143,10 +1210,16 @@ function createCard(fam, q, isVisitor = false, isHomenaje = false) {
 
     item.innerHTML = `
       <div class="member-top-row">
-        <input type="checkbox" class="member-check-input" ${s.contacted ? 'checked' : ''} onchange="togglePerson('${m.id}', this.checked)" title="Marcar avisado">
-        <div class="member-name-block">
-          <div class="member-name">${m.nombre}</div>
-          <div class="member-sub">${m.parentesco} • <b>${m.rol}</b></div>
+        <div class="member-main-info">
+          <input type="checkbox" class="member-check-input" ${s.contacted ? 'checked' : ''} onchange="togglePerson('${m.id}', this.checked)" title="Marcar avisado">
+          <div class="member-name-block">
+            <div class="member-name">${m.nombre}</div>
+            <div class="member-sub">${m.parentesco} • <b>${m.rol}</b></div>
+          </div>
+        </div>
+        <div class="member-quick-tools">
+          <button class="btn-tool" onclick="openEditModal('${m.id}')" title="Editar datos">✏️</button>
+          <button class="btn-tool del" onclick="confirmDeletePerson('${m.id}', '${m.nombre.replace(/'/g, "\\'")}')" title="Eliminar de la lista">🗑️</button>
         </div>
       </div>
       <div class="member-bottom-row">
@@ -1166,6 +1239,92 @@ function createCard(fam, q, isVisitor = false, isHomenaje = false) {
 
   card.appendChild(list);
   return card;
+}
+
+// ==========================================
+// 4. FUNCIONES DE EDICIÓN Y ELIMINACIÓN
+// ==========================================
+function findMemberById(memberId) {
+  const combined = [...getHomenajeadosProcessed(), ...getAllFamilies(), ...getAllVisitors()];
+  for (const f of combined) {
+    const found = f.miembros.find(m => m.id === memberId);
+    if (found) return found;
+  }
+  return null;
+}
+
+function openEditModal(memberId) {
+  const member = findMemberById(memberId);
+  if (!member) return;
+
+  document.getElementById('edit-person-id').value = memberId;
+  document.getElementById('edit-person-name').value = member.nombre;
+  document.getElementById('edit-person-role').value = member.rol || member.parentesco || '';
+  
+  const priTel = (member.telefonos && member.telefonos.length > 0) ? member.telefonos[0].num : '';
+  document.getElementById('edit-person-tel').value = priTel;
+
+  document.getElementById('editModal').style.display = 'flex';
+}
+
+function closeEditModal() {
+  document.getElementById('editModal').style.display = 'none';
+}
+
+function saveEditedPerson() {
+  const memberId = document.getElementById('edit-person-id').value;
+  const newName = document.getElementById('edit-person-name').value.trim();
+  const newRole = document.getElementById('edit-person-role').value.trim();
+  const newTel = document.getElementById('edit-person-tel').value.trim();
+
+  if (!newName) {
+    alert("El nombre no puede estar vacío.");
+    return;
+  }
+
+  const overrides = appState._person_overrides || {};
+  const currentMember = findMemberById(memberId) || {};
+  
+  let newTelefonos = currentMember.telefonos ? JSON.parse(JSON.stringify(currentMember.telefonos)) : [];
+  if (newTel) {
+    if (newTelefonos.length > 0) {
+      newTelefonos[0].num = newTel;
+    } else {
+      newTelefonos.push({ tipo: "Principal", num: newTel, nota: "Móvil" });
+    }
+  }
+
+  overrides[memberId] = {
+    nombre: newName,
+    rol: newRole,
+    parentesco: newRole,
+    telefonos: newTelefonos,
+    deleted: false
+  };
+
+  updateFieldInFirestore('_person_overrides', overrides);
+  closeEditModal();
+  renderApp();
+}
+
+function confirmDeletePerson(memberId, memberName) {
+  if (!confirm(`¿Estás seguro de que deseas retirar a "${memberName}" de la lista?`)) {
+    return;
+  }
+
+  const overrides = appState._person_overrides || {};
+  overrides[memberId] = {
+    deleted: true
+  };
+
+  // Si tenía estado de asistencia, se limpia
+  if (appState[memberId]) {
+    appState[memberId].status = 'pending';
+    appState[memberId].contacted = false;
+  }
+
+  updateFieldInFirestore('_person_overrides', overrides);
+  renderApp();
 }
 
 // Modal y Gestión de Nuevas Personas
@@ -1248,7 +1407,6 @@ function saveNewPerson() {
   customRecords.push(recordPayload);
   updateFieldInFirestore('_custom_records', customRecords);
 
-  // Limpiar y cerrar
   document.getElementById('new-person-name').value = '';
   document.getElementById('new-person-tel').value = '';
   document.getElementById('new-fam-name').value = '';
@@ -1263,7 +1421,7 @@ function togglePerson(id, val) {
 }
 
 function toggleFamily(fId, val) {
-  const allFamilies = [...HOMENAJEADOS, ...getAllFamilies(), ...getAllVisitors()];
+  const allFamilies = [...getHomenajeadosProcessed(), ...getAllFamilies(), ...getAllVisitors()];
   const fam = allFamilies.find(f => f.id === fId);
   if (!fam) return;
 
@@ -1303,7 +1461,7 @@ function copyWhatsAppSummary() {
   let familyReports = [];
   let aportesList = [];
 
-  const allCombined = [...HOMENAJEADOS, ...getAllFamilies(), ...getAllVisitors()];
+  const allCombined = [...getHomenajeadosProcessed(), ...getAllFamilies(), ...getAllVisitors()];
 
   allCombined.forEach(f => {
     const attendingMembers = f.miembros.filter(m => (appState[m.id] && appState[m.id].status === 'yes'));
