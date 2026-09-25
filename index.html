@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Despedida Hno. William Mercado y Esposa</title>
   
-  <!-- Firebase SDKs (Compatibles directamente en navegador) -->
+  <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
@@ -76,39 +76,50 @@
     }
     .family-card {
       background: var(--card); border: 1px solid var(--border); border-radius: 8px;
-      margin-bottom: 12px; overflow: hidden; box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+      margin-bottom: 14px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.05);
     }
     .family-card.completed {
       border-color: var(--green-border); background-color: #fafdfb;
     }
+    
+    /* Cabecera de Familia con Aporte Familiar */
     .family-head {
-      background: #f1f5f9; padding: 8px 12px; border-bottom: 1px solid var(--border);
-      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px;
+      background: #f1f5f9; padding: 10px 14px; border-bottom: 1px solid var(--border);
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;
     }
+    .family-title-block { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
     .family-name { font-weight: 700; font-size: 0.95rem; color: #0f172a; }
     .badge {
       display: inline-block; padding: 2px 6px; font-size: 0.7rem; font-weight: 700; border-radius: 4px;
-      background: #e2e8f0; color: #334155; margin-left: 4px;
+      background: #e2e8f0; color: #334155;
     }
     .badge-g { background: #dbeafe; color: #1e40af; }
+    
+    .family-actions-block { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .family-note-input {
+      padding: 5px 8px; font-size: 0.8rem; border-radius: 5px; border: 1px solid #94a3b8;
+      background: #ffffff; width: 230px; font-weight: 500; color: #1e3a8a;
+    }
+    .family-note-input::placeholder { color: #94a3b8; font-weight: normal; }
+
     .btn-fam-toggle {
       background: white; border: 1px solid #cbd5e1; border-radius: 4px;
-      padding: 4px 8px; font-size: 0.75rem; font-weight: 600; cursor: pointer; color: #334155;
+      padding: 5px 9px; font-size: 0.75rem; font-weight: 600; cursor: pointer; color: #334155;
     }
     .btn-fam-toggle:hover { background: #e2e8f0; }
 
     /* Filas de Integrantes */
     .member-list { padding: 4px 10px; }
     .member-row {
-      display: grid; grid-template-columns: auto 1.2fr 1.6fr auto;
-      gap: 10px; align-items: flex-start; padding: 10px 4px; border-bottom: 1px dashed #e2e8f0;
+      display: grid; grid-template-columns: auto 1.3fr 1.6fr auto;
+      gap: 10px; align-items: center; padding: 8px 4px; border-bottom: 1px dashed #e2e8f0;
     }
     .member-row:last-child { border-bottom: none; }
     .member-row.is-contacted { background: var(--green-bg); border-radius: 4px; }
     .member-name { font-weight: 600; font-size: 0.88rem; }
     .member-sub { font-size: 0.72rem; color: var(--text-muted); }
 
-    .phones-container { display: flex; flex-direction: column; gap: 4px; }
+    .phones-container { display: flex; flex-direction: column; gap: 3px; }
     .phone-item { display: flex; align-items: center; gap: 5px; flex-wrap: wrap; }
     .phone-tag {
       font-size: 0.68rem; font-weight: 700; padding: 2px 5px; border-radius: 3px;
@@ -116,9 +127,8 @@
     }
     .phone-tag.primary { background: #dbeafe; color: #1e40af; }
     .phone-tag.alt { background: #fef3c7; color: #92400e; }
-    .phone-number {
-      font-size: 0.82rem; font-weight: 600; color: #1e293b; min-width: 90px;
-    }
+    .phone-number { font-size: 0.82rem; font-weight: 600; color: #1e293b; }
+    
     .btn-icon {
       display: inline-flex; align-items: center; justify-content: center;
       width: 24px; height: 24px; border-radius: 4px; font-size: 0.72rem; text-decoration: none;
@@ -129,14 +139,9 @@
     .btn-wapp { background: #16a34a; }
     .btn-wapp:hover { background: #15803d; }
 
-    .actions-box { display: flex; flex-direction: column; gap: 5px; }
     .status-select {
       padding: 5px 8px; font-size: 0.8rem; border-radius: 4px; border: 1px solid var(--border);
       background: white; font-weight: 500;
-    }
-    .note-input {
-      padding: 5px 8px; font-size: 0.78rem; border-radius: 4px; border: 1px solid var(--border);
-      width: 140px;
     }
 
     #toast {
@@ -147,9 +152,9 @@
     @media (max-width: 768px) {
       .member-row { grid-template-columns: auto 1fr; gap: 8px; }
       .phones-container { grid-column: span 2; padding-left: 26px; }
-      .actions-box { grid-column: span 2; flex-direction: row; padding-left: 26px; width: 100%; }
-      .note-input { flex: 1; width: auto; }
-      .status-select { flex: 1; }
+      .actions-box { grid-column: span 2; padding-left: 26px; }
+      .family-note-input { width: 100%; }
+      .family-actions-block { width: 100%; justify-content: space-between; }
     }
   </style>
 </head>
@@ -158,7 +163,7 @@
   <header>
     <div>
       <h1>Despedida Hno. William Mercado y Esposa</h1>
-      <p>Sincronización en vivo con Firestore</p>
+      <p>Control de Asistencia y Aportes Familiares (En vivo)</p>
     </div>
     <div class="cloud-status" id="cloud-indicator">
       <span style="font-size:10px;">●</span> Conectando...
@@ -177,7 +182,7 @@
 
   <!-- Controles -->
   <div class="toolbar">
-    <input type="text" id="search" placeholder="🔍 Buscar persona, familia o teléfono..." oninput="renderApp()">
+    <input type="text" id="search" placeholder="🔍 Buscar persona, familia, aporte o teléfono..." oninput="renderApp()">
     <select id="filter-group" onchange="renderApp()">
       <option value="ALL">Todos los grupos</option>
       <option value="Grupo 1">Grupo 1</option>
@@ -192,6 +197,11 @@
       <option value="GRUPOS">Separar por Grupos de Servicio</option>
     </select>
     <button class="btn-action btn-wa" onclick="copyWhatsAppSummary()">📱 Resumen WhatsApp</button>
+    <button class="btn-action" onclick="exportData()">💾 Guardar Respaldo</button>
+    <label class="btn-action" style="cursor:pointer; display:inline-flex; align-items:center;">
+      📂 Cargar Respaldo
+      <input type="file" accept=".json" style="display:none" onchange="importData(event)">
+    </label>
   </div>
 
   <!-- Lista de Familias -->
@@ -202,11 +212,11 @@
   <div id="visitors-content"></div>
 </div>
 
-<div id="toast">Guardado en la nube</div>
+<div id="toast">Guardado en Firebase</div>
 
 <script>
 // ==========================================
-// 1. FIREBASE CONFIGURADO CON TUS CLAVES
+// 1. CONFIGURACIÓN FIREBASE FIRESTORE
 // ==========================================
 const firebaseConfig = {
   apiKey: "AIzaSyBZDiv6G_TWpQL_NGmOfw4ldXbDb8Zz86A",
@@ -218,18 +228,17 @@ const firebaseConfig = {
 };
 
 let db = null;
-let appState = JSON.parse(localStorage.getItem('libreta_mercado_firestore')) || {};
+let appState = JSON.parse(localStorage.getItem('libreta_mercado_firestore_v2')) || {};
 
 try {
   firebase.initializeApp(firebaseConfig);
   db = firebase.firestore();
-  document.getElementById('cloud-indicator').innerHTML = '<span style="color:#86efac">●</span> Firestore Conectado (En vivo)';
+  document.getElementById('cloud-indicator').innerHTML = '<span style="color:#86efac">●</span> Firestore Conectado';
 
-  // Escuchar cambios en Firestore en tiempo real
   db.collection("eventos").doc("despedida_mercado").onSnapshot((doc) => {
     if (doc.exists) {
       appState = doc.data();
-      localStorage.setItem('libreta_mercado_firestore', JSON.stringify(appState));
+      localStorage.setItem('libreta_mercado_firestore_v2', JSON.stringify(appState));
       renderApp();
     }
   }, (error) => {
@@ -241,15 +250,14 @@ try {
 }
 
 // ==========================================
-// 2. CONGREGACIÓN Y TELÉFONOS (A-Z)
+// 2. CONGREGACIÓN Y TELÉFONOS
 // ==========================================
 const FAMILIAS = [
   { id: "H023", nombre: "Arteaga Rangel", grupo: "Grupo 1", miembros: [
     { id: "P0034", nombre: "Oscar Enrique Arteaga Mendez", rol: "ANC, PR", parentesco: "Esposo",
       telefonos: [
         { tipo: "Principal", num: "3205692486", nota: "Móvil" },
-        { tipo: "Respaldo", num: "3245395674", nota: "Línea 2" },
-        { tipo: "Respaldo", num: "3005509232", nota: "Trabajo" }
+        { tipo: "Respaldo", num: "3245395674", nota: "Línea 2" }
       ]
     },
     { id: "P0035", nombre: "Ana Fernanda Arteaga (Rangel Salazar)", rol: "PR", parentesco: "Esposa",
@@ -300,8 +308,7 @@ const FAMILIAS = [
     { id: "P0029", nombre: "Alfonso Manuel Diaz Cardenas", rol: "PUB", parentesco: "Soltero/a",
       telefonos: [
         { tipo: "Principal", num: "3009579577", nota: "Línea Los Palmitos" },
-        { tipo: "Respaldo", num: "3008110812", nota: "Reg. Sep 2026" },
-        { tipo: "Respaldo", num: "3226873745", nota: "Reg. Feb 2025" }
+        { tipo: "Respaldo", num: "3008110812", nota: "Reg. Sep 2026" }
       ]
     }
   ]},
@@ -341,10 +348,7 @@ const FAMILIAS = [
       ]
     },
     { id: "P0038", nombre: "Jamer Arturo Hernandez Espina", rol: "PNB", parentesco: "Hijo",
-      telefonos: [
-        { tipo: "Principal", num: "3241893061", nota: "Reg. Jul 2024" },
-        { tipo: "Respaldo", num: "3239927496", nota: "Línea 2" }
-      ]
+      telefonos: [{ tipo: "Principal", num: "3241893061", nota: "Reg. Jul 2024" }]
     }
   ]},
   { id: "H022", nombre: "Julio Uribe", grupo: "Grupo 2", miembros: [
@@ -487,15 +491,13 @@ const FAMILIAS = [
     { id: "P0003", nombre: "Lilibeth del Carmen Revollo Vergara", rol: "PR", parentesco: "Madre",
       telefonos: [
         { tipo: "Principal", num: "3243962798", nota: "Tigo" },
-        { tipo: "Respaldo", num: "3243954308", nota: "Trabajo" },
-        { tipo: "Respaldo", num: "3187800730", nota: "Línea 2" }
+        { tipo: "Respaldo", num: "3243954308", nota: "Trabajo" }
       ]
     },
     { id: "P0004", nombre: "Michael Andres Martinez Revollo", rol: "PNB", parentesco: "Hijo",
       telefonos: [
         { tipo: "Principal", num: "3043190408", nota: "Línea 1" },
-        { tipo: "Respaldo", num: "3245815888", nota: "Línea 2" },
-        { tipo: "Respaldo", num: "3103686318", nota: "Datos" }
+        { tipo: "Respaldo", num: "3245815888", nota: "Línea 2" }
       ]
     }
   ]},
@@ -602,8 +604,7 @@ const FAMILIAS = [
     { id: "P0024", nombre: "Amada Isabel Tovar NN", rol: "PUB", parentesco: "Otro",
       telefonos: [
         { tipo: "Principal", num: "3126769983", nota: "Móvil" },
-        { tipo: "Respaldo", num: "3167166897", nota: "Línea 2" },
-        { tipo: "Respaldo", num: "3108134403", nota: "Tablet" }
+        { tipo: "Respaldo", num: "3167166897", nota: "Línea 2" }
       ]
     }
   ]},
@@ -644,11 +645,11 @@ const VISITANTES = [
 // 3. SINCRONIZACIÓN Y RENDER
 // ==========================================
 function syncData() {
-  localStorage.setItem('libreta_mercado_firestore', JSON.stringify(appState));
+  localStorage.setItem('libreta_mercado_firestore_v2', JSON.stringify(appState));
   if (db) {
     db.collection("eventos").doc("despedida_mercado").set(appState, { merge: true })
       .then(() => showToast())
-      .catch((err) => console.error("Error al guardar en Firestore:", err));
+      .catch((err) => console.error("Error al sincronizar con Firestore:", err));
   } else {
     showToast();
   }
@@ -694,8 +695,9 @@ function renderApp() {
   visDiv.innerHTML = '';
 
   const filtered = FAMILIAS.filter(f => {
+    const famNote = (appState[f.id] && appState[f.id].familyNote) ? appState[f.id].familyNote.toLowerCase() : '';
     const mGrp = (grp === 'ALL' || f.grupo === grp);
-    const mSearch = f.nombre.toLowerCase().includes(q) || f.miembros.some(m => {
+    const mSearch = f.nombre.toLowerCase().includes(q) || famNote.includes(q) || f.miembros.some(m => {
       const matchName = m.nombre.toLowerCase().includes(q);
       const matchPhone = m.telefonos && m.telefonos.some(t => t.num.includes(q));
       return matchName || matchPhone;
@@ -734,17 +736,21 @@ function createCard(fam, q, isVisitor = false) {
   const allChecked = fam.miembros.every(m => (appState[m.id] && appState[m.id].contacted));
   card.className = `family-card ${allChecked ? 'completed' : ''}`;
 
+  const currentFamilyNote = (appState[fam.id] && appState[fam.id].familyNote) ? appState[fam.id].familyNote : '';
+
   const head = document.createElement('div');
   head.className = 'family-head';
   head.innerHTML = `
-    <div class="family-name">
-      ${isVisitor ? '👤' : '🏠'} Familia ${fam.nombre}
+    <div class="family-title-block">
+      <span class="family-name">${isVisitor ? '👤' : '🏠'} Familia ${fam.nombre}</span>
       <span class="badge badge-g">${fam.grupo}</span>
       <span class="badge">${fam.miembros.length} ${fam.miembros.length === 1 ? 'persona' : 'personas'}</span>
     </div>
-    <div>
+    <div class="family-actions-block">
+      <input type="text" class="family-note-input" placeholder="🍲 Aporte de la familia (arroz, carne, etc.)..." 
+             value="${currentFamilyNote}" onchange="setFamilyNote('${fam.id}', this.value)">
       <button class="btn-fam-toggle" onclick="toggleFamily('${fam.id}', ${!allChecked}, ${isVisitor})">
-        ${allChecked ? 'Desmarcar familia' : '✓ Avisar a todos'}
+        ${allChecked ? 'Desmarcar' : '✓ Avisar a todos'}
       </button>
     </div>
   `;
@@ -755,12 +761,13 @@ function createCard(fam, q, isVisitor = false) {
 
   fam.miembros.forEach(m => {
     if (q) {
-      const matchName = m.nombre.toLowerCase().includes(q) || fam.nombre.toLowerCase().includes(q);
+      const famNote = (appState[fam.id] && appState[fam.id].familyNote) ? appState[fam.id].familyNote.toLowerCase() : '';
+      const matchName = m.nombre.toLowerCase().includes(q) || fam.nombre.toLowerCase().includes(q) || famNote.includes(q);
       const matchPhone = m.telefonos && m.telefonos.some(t => t.num.includes(q));
       if (!matchName && !matchPhone) return;
     }
 
-    const s = appState[m.id] || { contacted: false, status: 'pending', note: '' };
+    const s = appState[m.id] || { contacted: false, status: 'pending' };
     const row = document.createElement('div');
     row.className = `member-row ${s.contacted ? 'is-contacted' : ''}`;
 
@@ -787,7 +794,7 @@ function createCard(fam, q, isVisitor = false) {
       });
       phonesHtml += '</div>';
     } else {
-      phonesHtml = '<span style="font-size:0.75rem; color:var(--text-muted);">Sin teléfono registrado</span>';
+      phonesHtml = '<span style="font-size:0.75rem; color:var(--text-muted);">Sin teléfono</span>';
     }
 
     row.innerHTML = `
@@ -806,7 +813,6 @@ function createCard(fam, q, isVisitor = false) {
           <option value="maybe" ${s.status === 'maybe' ? 'selected' : ''}>🤔 En duda</option>
           <option value="no" ${s.status === 'no' ? 'selected' : ''}>❌ No va</option>
         </select>
-        <input type="text" class="note-input" placeholder="Aporte / detalle..." value="${s.note || ''}" onchange="setNote('${m.id}', this.value)">
       </div>
     `;
     list.appendChild(row);
@@ -817,7 +823,7 @@ function createCard(fam, q, isVisitor = false) {
 }
 
 function togglePerson(id, val) {
-  if (!appState[id]) appState[id] = { status: 'pending', note: '' };
+  if (!appState[id]) appState[id] = { status: 'pending' };
   appState[id].contacted = val;
   syncData();
   renderApp();
@@ -828,7 +834,7 @@ function toggleFamily(fId, val, isVisitor) {
   const fam = source.find(f => f.id === fId);
   if (!fam) return;
   fam.miembros.forEach(m => {
-    if (!appState[m.id]) appState[m.id] = { status: 'pending', note: '' };
+    if (!appState[m.id]) appState[m.id] = { status: 'pending' };
     appState[m.id].contacted = val;
   });
   syncData();
@@ -836,47 +842,80 @@ function toggleFamily(fId, val, isVisitor) {
 }
 
 function setStatus(id, val) {
-  if (!appState[id]) appState[id] = { contacted: false, note: '' };
+  if (!appState[id]) appState[id] = { contacted: false };
   appState[id].status = val;
   if (val !== 'pending') appState[id].contacted = true;
   syncData();
   renderApp();
 }
 
-function setNote(id, val) {
-  if (!appState[id]) appState[id] = { contacted: false, status: 'pending' };
-  appState[id].note = val;
+function setFamilyNote(familyId, val) {
+  if (!appState[familyId]) appState[familyId] = {};
+  appState[familyId].familyNote = val.trim();
   syncData();
 }
 
 function copyWhatsAppSummary() {
-  let yesList = [];
-  let maybeList = [];
   let confirmedPeople = 0;
+  let familyReports = [];
+  let aportesList = [];
 
   FAMILIAS.forEach(f => {
-    f.miembros.forEach(m => {
-      const s = appState[m.id] || {};
-      if (s.status === 'yes') {
-        confirmedPeople++;
-        const noteStr = s.note ? ` (${s.note})` : '';
-        yesList.push(`• ${m.nombre} [Fam. ${f.nombre}]${noteStr}`);
-      } else if (s.status === 'maybe') {
-        maybeList.push(`• ${m.nombre} [Fam. ${f.nombre}]`);
+    const attendingMembers = f.miembros.filter(m => (appState[m.id] && appState[m.id].status === 'yes'));
+    const famAporte = (appState[f.id] && appState[f.id].familyNote) ? appState[f.id].familyNote.trim() : '';
+
+    if (attendingMembers.length > 0) {
+      confirmedPeople += attendingMembers.length;
+      let str = `*Familia ${f.nombre}* (${attendingMembers.length}):\n`;
+      str += attendingMembers.map(m => `  • ${m.nombre}`).join('\n');
+      if (famAporte) {
+        str += `\n  🍲 _Aporte:_ ${famAporte}`;
+        aportesList.push(`• *Fam. ${f.nombre}:* ${famAporte}`);
       }
-    });
+      familyReports.push(str);
+    } else if (famAporte) {
+      // Si la familia aportó pero aún no confirman los miembros exactos
+      aportesList.push(`• *Fam. ${f.nombre}:* ${famAporte}`);
+    }
   });
 
-  let txt = `*REPORTE DESPEDIDA - HNO. WILLIAM MERCADO Y ESPOSA*\n\n`;
-  txt += `✅ *Confirmados que asisten:* ${confirmedPeople}\n\n`;
-  txt += `*Listado de Asistentes:*\n` + (yesList.length ? yesList.join('\n') : 'Ninguno aún') + `\n\n`;
-  if (maybeList.length > 0) {
-    txt += `🤔 *Por confirmar (${maybeList.length}):*\n` + maybeList.join('\n');
+  let txt = `🎉 *REPORTE DESPEDIDA - HNO. WILLIAM MERCADO Y ESPOSA*\n\n`;
+  txt += `👥 *Total Asistentes Confirmados:* ${confirmedPeople} personas\n\n`;
+  txt += `📋 *DETALLE POR FAMILIAS CONFIRMADAS:*\n\n`;
+  txt += familyReports.length ? familyReports.join('\n\n') : 'Ninguna familia confirmada aún.\n';
+  
+  if (aportesList.length > 0) {
+    txt += `\n\n🍲 *RESUMEN DE APORTES / COMIDA:*\n\n` + aportesList.join('\n');
   }
 
   navigator.clipboard.writeText(txt).then(() => {
-    alert("¡Resumen copiado para WhatsApp al portapapeles!");
+    alert("¡Resumen familiar para WhatsApp copiado al portapapeles!");
   });
+}
+
+function exportData() {
+  const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appState, null, 2));
+  const dl = document.createElement('a');
+  dl.setAttribute("href", dataStr);
+  dl.setAttribute("download", "registro_despedida_mercado.json");
+  dl.click();
+}
+
+function importData(evt) {
+  const file = evt.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      appState = JSON.parse(e.target.result);
+      syncData();
+      renderApp();
+      alert("¡Respaldo cargado y sincronizado con Firebase!");
+    } catch(err) {
+      alert("Error al leer el archivo JSON.");
+    }
+  };
+  reader.readAsText(file);
 }
 
 renderApp();
