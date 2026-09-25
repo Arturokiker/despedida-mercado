@@ -22,13 +22,11 @@
       --green-bg: #f0fdf4;
       --green-border: #86efac;
       --yellow: #b45309;
-      --yellow-bg: #fefce8;
       --red: #b91c1c;
-      --red-bg: #fef2f2;
     }
     * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
     body { background-color: var(--bg); color: var(--text); margin: 0; padding: 10px; }
-    .container { max-width: 980px; margin: 0 auto; }
+    .container { max-width: 960px; margin: 0 auto; }
 
     header {
       background: linear-gradient(135deg, #1e3a8a, #2563eb);
@@ -43,7 +41,7 @@
       border-radius: 9999px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;
     }
 
-    /* Estadísticas Interactivas */
+    /* Estadísticas / Filtros de 1 toque */
     .stats-grid {
       display: grid; grid-template-columns: repeat(3, 1fr);
       gap: 6px; margin-bottom: 10px;
@@ -64,7 +62,7 @@
     .stat-val { font-size: 1.2rem; font-weight: 700; color: var(--primary); }
     .stat-lbl { font-size: 0.68rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; margin-top: 1px; }
 
-    /* Barra de Progreso */
+    /* Barra Visual de Progreso */
     .progress-section {
       background: white; border: 1px solid var(--border); border-radius: 8px;
       padding: 8px 12px; margin-bottom: 12px; display: flex; flex-direction: column; gap: 5px;
@@ -123,21 +121,21 @@
       display: flex; align-items: center; gap: 6px; border-bottom: 2px solid #bfdbfe; padding-bottom: 4px;
     }
     .family-card {
-      background: var(--card); border: 1px solid var(--border); border-radius: 8px;
-      margin-bottom: 12px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+      background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+      margin-bottom: 14px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.05);
     }
     .family-card.completed {
       border-color: var(--green-border); background-color: #fafdfb;
     }
     
     .family-head {
-      background: #f1f5f9; padding: 8px 10px; border-bottom: 1px solid var(--border);
-      display: flex; flex-direction: column; gap: 6px;
+      background: #f1f5f9; padding: 10px 12px; border-bottom: 1px solid var(--border);
+      display: flex; flex-direction: column; gap: 8px;
     }
     .family-title-block {
       display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 4px;
     }
-    .family-name { font-weight: 700; font-size: 0.92rem; color: #0f172a; }
+    .family-name { font-weight: 700; font-size: 0.95rem; color: #0f172a; }
     .badge {
       display: inline-block; padding: 2px 6px; font-size: 0.68rem; font-weight: 700; border-radius: 4px;
       background: #e2e8f0; color: #334155;
@@ -148,80 +146,78 @@
       display: flex; align-items: center; gap: 6px; width: 100%;
     }
     .family-note-input {
-      flex: 1; padding: 6px 8px; font-size: 0.8rem; border-radius: 6px; border: 1px solid #94a3b8;
+      flex: 1; padding: 7px 10px; font-size: 0.8rem; border-radius: 6px; border: 1px solid #94a3b8;
       background: #ffffff; font-weight: 500; color: #1e3a8a;
     }
     .btn-fam-toggle {
       background: white; border: 1px solid #cbd5e1; border-radius: 6px;
-      padding: 6px 10px; font-size: 0.74rem; font-weight: 600; cursor: pointer; color: #334155; white-space: nowrap;
+      padding: 7px 10px; font-size: 0.76rem; font-weight: 600; cursor: pointer; color: #334155; white-space: nowrap;
     }
 
-    /* Filas de Integrantes */
-    .member-list { padding: 2px 8px; }
-    .member-row {
-      display: grid; grid-template-columns: auto 1fr;
-      gap: 6px 8px; align-items: center; padding: 8px 4px; border-bottom: 1px dashed #e2e8f0;
+    /* Integrantes: Estructura Vertical y Limpia para Celular */
+    .member-list { padding: 4px 8px; }
+    .member-card-item {
+      display: flex; flex-direction: column; gap: 6px;
+      padding: 10px 8px; border-bottom: 1px dashed #e2e8f0;
+      border-radius: 6px; margin-bottom: 4px;
     }
-    .member-row:last-child { border-bottom: none; }
-    .member-row.is-contacted { background: var(--green-bg); border-radius: 4px; }
-    .member-row.status-yes { border-left: 3px solid var(--green); padding-left: 6px; }
-    .member-row.status-maybe { border-left: 3px solid var(--yellow); padding-left: 6px; }
-    .member-row.status-no { border-left: 3px solid var(--red); padding-left: 6px; }
-    
-    .member-checkbox { grid-row: span 2; }
-    .member-info { display: flex; flex-direction: column; }
-    .member-name { font-weight: 600; font-size: 0.85rem; }
-    .member-sub { font-size: 0.7rem; color: var(--text-muted); }
+    .member-card-item:last-child { border-bottom: none; }
+    .member-card-item.is-contacted { background: var(--green-bg); }
+    .member-card-item.status-yes { border-left: 4px solid var(--green); }
+    .member-card-item.status-maybe { border-left: 4px solid var(--yellow); }
+    .member-card-item.status-no { border-left: 4px solid var(--red); }
 
-    .member-details-cell {
-      grid-column: 2; display: flex; flex-direction: column; gap: 5px; margin-top: 2px;
+    /* Fila superior: Checkbox + Nombre y Rol */
+    .member-top-row {
+      display: flex; align-items: flex-start; gap: 10px; width: 100%;
     }
-    .phones-container { display: flex; flex-direction: column; gap: 3px; }
-    .phone-item { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+    .member-check-input {
+      width: 20px; height: 20px; cursor: pointer; margin-top: 2px; flex-shrink: 0;
+    }
+    .member-name-block { flex: 1; min-width: 0; }
+    .member-name { font-weight: 700; font-size: 0.92rem; color: #0f172a; line-height: 1.25; }
+    .member-sub { font-size: 0.74rem; color: var(--text-muted); margin-top: 2px; }
+
+    /* Fila inferior: Teléfonos a la izquierda y Selector a la derecha */
+    .member-bottom-row {
+      display: flex; flex-direction: column; gap: 6px; padding-left: 30px;
+    }
+    @media (min-width: 520px) {
+      .member-bottom-row {
+        flex-direction: row; justify-content: space-between; align-items: center;
+      }
+    }
+
+    .phones-container { display: flex; flex-direction: column; gap: 4px; }
+    .phone-item { display: flex; align-items: center; gap: 5px; flex-wrap: wrap; }
     .phone-tag {
-      font-size: 0.65rem; font-weight: 700; padding: 1px 4px; border-radius: 3px;
+      font-size: 0.65rem; font-weight: 700; padding: 2px 5px; border-radius: 3px;
       background: #e2e8f0; color: #475569;
     }
     .phone-tag.primary { background: #dbeafe; color: #1e40af; }
     .phone-tag.alt { background: #fef3c7; color: #92400e; }
-    .phone-number { font-size: 0.78rem; font-weight: 600; color: #1e293b; }
+    .phone-number { font-size: 0.82rem; font-weight: 600; color: #1e293b; }
     
     .btn-icon {
       display: inline-flex; align-items: center; justify-content: center;
-      width: 22px; height: 22px; border-radius: 4px; font-size: 0.7rem; text-decoration: none;
+      width: 26px; height: 26px; border-radius: 5px; font-size: 0.75rem; text-decoration: none;
       color: white; border: none; cursor: pointer;
     }
     .btn-call { background: #0284c7; }
     .btn-wapp { background: #16a34a; }
 
-    .actions-box { display: flex; align-items: center; gap: 6px; width: 100%; }
     .status-select {
-      flex: 1; padding: 5px 6px; font-size: 0.78rem; border-radius: 5px; border: 1px solid var(--border);
-      background: white; font-weight: 600;
+      padding: 6px 10px; font-size: 0.8rem; border-radius: 6px; border: 1px solid var(--border);
+      background: white; font-weight: 600; min-width: 140px; width: 100%;
+    }
+    @media (min-width: 520px) {
+      .status-select { width: auto; }
     }
 
     #toast {
       position: fixed; bottom: 12px; right: 12px; background: #0f172a; color: white;
       padding: 6px 12px; border-radius: 6px; font-size: 0.75rem; display: none; z-index: 100;
       box-shadow: 0 4px 6px rgba(0,0,0,0.15);
-    }
-
-    /* En pantallas grandes (PC/Tablet) distribuir horizontalmente */
-    @media (min-width: 768px) {
-      .family-head { flex-direction: row; justify-content: space-between; }
-      .family-actions-block { width: auto; }
-      .family-note-input { width: 260px; }
-      .member-row {
-        grid-template-columns: auto 1.3fr 1.6fr 150px;
-      }
-      .member-checkbox { grid-row: auto; }
-      .member-details-cell {
-        grid-column: auto; flex-direction: row; align-items: center; justify-content: space-between;
-      }
-      .toolbar { flex-direction: row; }
-      .toolbar-row-top { width: auto; flex: 1; }
-      .toolbar-row-filters { width: auto; display: flex; }
-      .toolbar-row-actions { width: auto; display: flex; }
     }
   </style>
 </head>
@@ -230,14 +226,14 @@
   <header>
     <div>
       <h1>Despedida Hno. William Mercado y Esposa</h1>
-      <p>Control de Asistencia y Aportes Familiares (Sincronizado)</p>
+      <p>Control de Asistencia y Aportes Familiares (En vivo)</p>
     </div>
     <div class="cloud-status" id="cloud-indicator">
       <span style="font-size:10px;">●</span> Conectando...
     </div>
   </header>
 
-  <!-- Métricas Interactivas (Filtros de un solo clic) -->
+  <!-- Métricas Interactivas (Filtros rápidos con 1 toque) -->
   <div class="stats-grid">
     <div class="stat-box active" id="btn-filtro-ALL" onclick="setQuickFilter('ALL')">
       <div class="stat-val" id="st-fam">0</div>
@@ -289,7 +285,7 @@
     </div>
   </div>
 
-  <!-- Barra de Herramientas Optimizada para Móvil -->
+  <!-- Barra de Herramientas -->
   <div class="toolbar">
     <div class="toolbar-row-top">
       <input type="text" id="search" placeholder="🔍 Buscar persona, familia o aporte..." oninput="renderApp()">
@@ -331,7 +327,7 @@
   <div id="visitors-content"></div>
 </div>
 
-<div id="toast">Guardado</div>
+<div id="toast">Guardado en Firebase</div>
 
 <script>
 // ==========================================
@@ -354,38 +350,29 @@ try {
   firebase.initializeApp(firebaseConfig);
   db = firebase.firestore();
 
-  // Habilitar persistencia offline en el navegador del teléfono
   db.enablePersistence({ synchronizeTabs: true }).catch((err) => {
-    if (err.code === 'failed-precondition') {
-      console.warn("Persistencia abierta en múltiples pestañas.");
-    } else if (err.code === 'unimplemented') {
-      console.warn("Navegador no soporta persistencia offline.");
-    }
+    console.warn("Persistencia:", err.code);
   });
 
-  // Indicador de conexión
   window.addEventListener('online', () => {
     document.getElementById('cloud-indicator').innerHTML = '<span style="color:#86efac">●</span> Conectado (En vivo)';
   });
   window.addEventListener('offline', () => {
-    document.getElementById('cloud-indicator').innerHTML = '<span style="color:#fde047">●</span> Sin internet (Guardando local)';
+    document.getElementById('cloud-indicator').innerHTML = '<span style="color:#fde047">●</span> Sin internet (Local)';
   });
 
   if (navigator.onLine) {
     document.getElementById('cloud-indicator').innerHTML = '<span style="color:#86efac">●</span> Conectado (En vivo)';
   } else {
-    document.getElementById('cloud-indicator').innerHTML = '<span style="color:#fde047">●</span> Sin internet (Guardando local)';
+    document.getElementById('cloud-indicator').innerHTML = '<span style="color:#fde047">●</span> Sin internet (Local)';
   }
 
-  // Escuchar Firestore en tiempo real (incluso desde caché offline)
   db.collection("eventos").doc("despedida_mercado").onSnapshot({ includeMetadataChanges: true }, (doc) => {
     if (doc.exists) {
       appState = doc.data();
       localStorage.setItem('libreta_mercado_local_cache', JSON.stringify(appState));
       renderApp();
     }
-  }, (error) => {
-    console.warn("Modo local activo:", error);
   });
 } catch (e) {
   document.getElementById('cloud-indicator').innerHTML = '<span style="color:#fde047">●</span> Modo Local';
@@ -784,21 +771,19 @@ const VISITANTES = [
 ];
 
 // ==========================================
-// 3. SINCRONIZACIÓN GRANULAR (SIN CONFLICTOS)
+// 3. SINCRONIZACIÓN Y LÓGICA DE ACTUALIZACIÓN
 // ==========================================
 function updateFieldInFirestore(key, value) {
-  // Actualización local inmediata
   appState[key] = value;
   localStorage.setItem('libreta_mercado_local_cache', JSON.stringify(appState));
   showToast();
   updateMetricsAndAnalytics();
 
-  // Envío a Firestore solo del campo modificado (Merge puntual)
   if (db) {
     db.collection("eventos").doc("despedida_mercado").set({
       [key]: value
     }, { merge: true }).catch((err) => {
-      console.warn("Dato en cola para enviar cuando vuelva internet:", err);
+      console.warn("Pendiente por subir:", err);
     });
   }
 }
@@ -937,8 +922,10 @@ function createCard(fam, q, isVisitor = false) {
   head.innerHTML = `
     <div class="family-title-block">
       <span class="family-name">${isVisitor ? '👤' : '🏠'} Familia ${fam.nombre}</span>
-      <span class="badge badge-g">${fam.grupo}</span>
-      <span class="badge">${fam.miembros.length} ${fam.miembros.length === 1 ? 'persona' : 'personas'}</span>
+      <div>
+        <span class="badge badge-g">${fam.grupo}</span>
+        <span class="badge">${fam.miembros.length} ${fam.miembros.length === 1 ? 'persona' : 'personas'}</span>
+      </div>
     </div>
     <div class="family-actions-block">
       <input type="text" class="family-note-input" placeholder="🍲 Aporte familiar..." 
@@ -968,9 +955,10 @@ function createCard(fam, q, isVisitor = false) {
       if (!matchName && !matchPhone) return;
     }
 
-    const row = document.createElement('div');
-    row.className = `member-row ${s.contacted ? 'is-contacted' : ''} status-${s.status || 'pending'}`;
+    const item = document.createElement('div');
+    item.className = `member-card-item ${s.contacted ? 'is-contacted' : ''} status-${s.status || 'pending'}`;
 
+    // Construcción de la lista de teléfonos
     let phonesHtml = '';
     if (m.telefonos && m.telefonos.length > 0) {
       phonesHtml = '<div class="phones-container">';
@@ -995,17 +983,17 @@ function createCard(fam, q, isVisitor = false) {
       phonesHtml += '</div>';
     }
 
-    row.innerHTML = `
-      <div class="member-checkbox">
-        <input type="checkbox" ${s.contacted ? 'checked' : ''} onchange="togglePerson('${m.id}', this.checked)" title="Marcar como avisado">
+    item.innerHTML = `
+      <div class="member-top-row">
+        <input type="checkbox" class="member-check-input" ${s.contacted ? 'checked' : ''} onchange="togglePerson('${m.id}', this.checked)" title="Marcar avisado">
+        <div class="member-name-block">
+          <div class="member-name">${m.nombre}</div>
+          <div class="member-sub">${m.parentesco} • <b>${m.rol}</b></div>
+        </div>
       </div>
-      <div class="member-info">
-        <span class="member-name">${m.nombre}</span>
-        <span class="member-sub">${m.parentesco} • <b>${m.rol}</b></span>
-      </div>
-      <div class="member-details-cell">
+      <div class="member-bottom-row">
         ${phonesHtml}
-        <div class="actions-box">
+        <div>
           <select class="status-select" onchange="setStatus('${m.id}', this.value)">
             <option value="pending" ${s.status === 'pending' ? 'selected' : ''}>⏳ Pendiente</option>
             <option value="yes" ${s.status === 'yes' ? 'selected' : ''}>✅ Asiste</option>
@@ -1015,7 +1003,7 @@ function createCard(fam, q, isVisitor = false) {
         </div>
       </div>
     `;
-    list.appendChild(row);
+    list.appendChild(item);
   });
 
   card.appendChild(list);
@@ -1097,7 +1085,7 @@ function copyWhatsAppSummary() {
   }
 
   navigator.clipboard.writeText(txt).then(() => {
-    alert("¡Resumen familiar para WhatsApp copiado al portapapeles!");
+    alert("¡Resumen copiado para WhatsApp!");
   });
 }
 
@@ -1122,7 +1110,7 @@ function importData(evt) {
         db.collection("eventos").doc("despedida_mercado").set(appState, { merge: true });
       }
       renderApp();
-      alert("¡Respaldo cargado y sincronizado con Firebase!");
+      alert("¡Respaldo cargado exitosamente!");
     } catch(err) {
       alert("Error al leer el archivo JSON.");
     }
