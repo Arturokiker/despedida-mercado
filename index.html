@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Despedida Hno. William Mercado y Esposa</title>
+  
+  <!-- Firebase SDKs (Compatibles directamente en navegador) -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+  <style>
+    :root {
+      --primary: #1e3a8a;
+      --primary-light: #2563eb;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --border: #cbd5e1;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --green: #15803d;
+      --green-bg: #f0fdf4;
+      --green-border: #86efac;
+      --yellow: #b45309;
+      --red: #b91c1c;
+    }
+    * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { background-color: var(--bg); color: var(--text); margin: 0; padding: 12px; }
+    .container { max-width: 960px; margin: 0 auto; }
+
+    header {
+      background: linear-gradient(135deg, #1e3a8a, #2563eb);
+      color: white; padding: 16px 20px; border-radius: 12px; margin-bottom: 14px;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.08);
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;
+    }
+    header h1 { margin: 0 0 4px 0; font-size: 1.35rem; }
+    header p { margin: 0; opacity: 0.9; font-size: 0.85rem; }
+    .cloud-status {
+      background: rgba(255, 255, 255, 0.2); font-size: 0.75rem; padding: 4px 10px;
+      border-radius: 9999px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;
+    }
+
+    /* Estadísticas */
+    .stats-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+      gap: 8px; margin-bottom: 14px;
+    }
+    .stat-box {
+      background: white; border: 1px solid var(--border); border-radius: 8px;
+      padding: 8px 10px; text-align: center; box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+    }
+    .stat-val { font-size: 1.25rem; font-weight: 700; color: var(--primary); }
+    .stat-lbl { font-size: 0.72rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; }
+
+    /* Controles */
+    .toolbar {
+      background: white; border: 1px solid var(--border); border-radius: 10px;
+      padding: 10px; margin-bottom: 14px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+    }
+    .toolbar input, .toolbar select, .toolbar button {
+      padding: 8px 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 0.85rem;
+    }
+    .toolbar input { flex: 1; min-width: 200px; }
+    .btn-action {
+      background: #0284c7; color: white; border: none; font-weight: 600; cursor: pointer;
+    }
+    .btn-action:hover { background: #0369a1; }
+    .btn-wa { background: #16a34a; }
+    .btn-wa:hover { background: #15803d; }
+
+    /* Tarjetas de Familias */
+    .section-title {
+      font-size: 1.1rem; font-weight: bold; color: #1e3a8a; margin: 22px 0 10px 0;
+      display: flex; align-items: center; gap: 6px; border-bottom: 2px solid #bfdbfe; padding-bottom: 4px;
+    }
+    .family-card {
+      background: var(--card); border: 1px solid var(--border); border-radius: 8px;
+      margin-bottom: 12px; overflow: hidden; box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+    }
+    .family-card.completed {
+      border-color: var(--green-border); background-color: #fafdfb;
+    }
+    .family-head {
+      background: #f1f5f9; padding: 8px 12px; border-bottom: 1px solid var(--border);
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px;
+    }
+    .family-name { font-weight: 700; font-size: 0.95rem; color: #0f172a; }
+    .badge {
+      display: inline-block; padding: 2px 6px; font-size: 0.7rem; font-weight: 700; border-radius: 4px;
+      background: #e2e8f0; color: #334155; margin-left: 4px;
+    }
+    .badge-g { background: #dbeafe; color: #1e40af; }
+    .btn-fam-toggle {
+      background: white; border: 1px solid #cbd5e1; border-radius: 4px;
+      padding: 4px 8px; font-size: 0.75rem; font-weight: 600; cursor: pointer; color: #334155;
+    }
+    .btn-fam-toggle:hover { background: #e2e8f0; }
+
+    /* Filas de Integrantes */
+    .member-list { padding: 4px 10px; }
+    .member-row {
+      display: grid; grid-template-columns: auto 1.2fr 1.6fr auto;
+      gap: 10px; align-items: flex-start; padding: 10px 4px; border-bottom: 1px dashed #e2e8f0;
+    }
+    .member-row:last-child { border-bottom: none; }
+    .member-row.is-contacted { background: var(--green-bg); border-radius: 4px; }
+    .member-name { font-weight: 600; font-size: 0.88rem; }
+    .member-sub { font-size: 0.72rem; color: var(--text-muted); }
+
+    .phones-container { display: flex; flex-direction: column; gap: 4px; }
+    .phone-item { display: flex; align-items: center; gap: 5px; flex-wrap: wrap; }
+    .phone-tag {
+      font-size: 0.68rem; font-weight: 700; padding: 2px 5px; border-radius: 3px;
+      background: #e2e8f0; color: #475569;
+    }
+    .phone-tag.primary { background: #dbeafe; color: #1e40af; }
+    .phone-tag.alt { background: #fef3c7; color: #92400e; }
+    .phone-number {
+      font-size: 0.82rem; font-weight: 600; color: #1e293b; min-width: 90px;
+    }
+    .btn-icon {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 24px; height: 24px; border-radius: 4px; font-size: 0.72rem; text-decoration: none;
+      color: white; border: none; cursor: pointer;
+    }
+    .btn-call { background: #0284c7; }
+    .btn-call:hover { background: #0369a1; }
+    .btn-wapp { background: #16a34a; }
+    .btn-wapp:hover { background: #15803d; }
+
+    .actions-box { display: flex; flex-direction: column; gap: 5px; }
+    .status-select {
+      padding: 5px 8px; font-size: 0.8rem; border-radius: 4px; border: 1px solid var(--border);
+      background: white; font-weight: 500;
+    }
+    .note-input {
+      padding: 5px 8px; font-size: 0.78rem; border-radius: 4px; border: 1px solid var(--border);
+      width: 140px;
+    }
+
+    #toast {
+      position: fixed; bottom: 16px; right: 16px; background: #1e293b; color: white;
+      padding: 8px 14px; border-radius: 6px; font-size: 0.82rem; display: none; z-index: 100;
+    }
+
+    @media (max-width: 768px) {
+      .member-row { grid-template-columns: auto 1fr; gap: 8px; }
+      .phones-container { grid-column: span 2; padding-left: 26px; }
+      .actions-box { grid-column: span 2; flex-direction: row; padding-left: 26px; width: 100%; }
+      .note-input { flex: 1; width: auto; }
+      .status-select { flex: 1; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div>
+      <h1>Despedida Hno. William Mercado y Esposa</h1>
+      <p>Sincronización en vivo con Firestore</p>
+    </div>
+    <div class="cloud-status" id="cloud-indicator">
+      <span style="font-size:10px;">●</span> Conectando...
+    </div>
+  </header>
+
+  <!-- Métricas -->
+  <div class="stats-grid">
+    <div class="stat-box"><div class="stat-val" id="st-fam">0</div><div class="stat-lbl">Familias</div></div>
+    <div class="stat-box"><div class="stat-val" id="st-total">0</div><div class="stat-lbl">Personas</div></div>
+    <div class="stat-box"><div class="stat-val" id="st-contacted">0</div><div class="stat-lbl">Avisados</div></div>
+    <div class="stat-box"><div class="stat-val" style="color:var(--green)" id="st-yes">0</div><div class="stat-lbl">Asistirán</div></div>
+    <div class="stat-box"><div class="stat-val" style="color:var(--yellow)" id="st-maybe">0</div><div class="stat-lbl">En duda</div></div>
+    <div class="stat-box"><div class="stat-val" style="color:var(--red)" id="st-no">0</div><div class="stat-lbl">No van</div></div>
+  </div>
+
+  <!-- Controles -->
+  <div class="toolbar">
+    <input type="text" id="search" placeholder="🔍 Buscar persona, familia o teléfono..." oninput="renderApp()">
+    <select id="filter-group" onchange="renderApp()">
+      <option value="ALL">Todos los grupos</option>
+      <option value="Grupo 1">Grupo 1</option>
+      <option value="Grupo 2">Grupo 2</option>
+      <option value="Grupo 3">Grupo 3</option>
+      <option value="Grupo 4">Grupo 4</option>
+      <option value="Grupo 5">Grupo 5</option>
+      <option value="-">Sin grupo</option>
+    </select>
+    <select id="view-mode" onchange="renderApp()">
+      <option value="BLOQUE">Bloque Entero (A-Z)</option>
+      <option value="GRUPOS">Separar por Grupos de Servicio</option>
+    </select>
+    <button class="btn-action btn-wa" onclick="copyWhatsAppSummary()">📱 Resumen WhatsApp</button>
+  </div>
+
+  <!-- Lista de Familias -->
+  <div id="main-content"></div>
+
+  <!-- Sección de Visitantes -->
+  <div class="section-title">👥 Sección Aparte: Visitantes y Estudiantes</div>
+  <div id="visitors-content"></div>
+</div>
+
+<div id="toast">Guardado en la nube</div>
+
+<script>
+// ==========================================
+// 1. FIREBASE CONFIGURADO CON TUS CLAVES
+// ==========================================
+const firebaseConfig = {
+  apiKey: "AIzaSyBZDiv6G_TWpQL_NGmOfw4ldXbDb8Zz86A",
+  authDomain: "despedida-mercado.firebaseapp.com",
+  projectId: "despedida-mercado",
+  storageBucket: "despedida-mercado.firebasestorage.app",
+  messagingSenderId: "924032330640",
+  appId: "1:924032330640:web:7d796c56a63bc2d9c3a115"
+};
+
+let db = null;
+let appState = JSON.parse(localStorage.getItem('libreta_mercado_firestore')) || {};
+
+try {
+  firebase.initializeApp(firebaseConfig);
+  db = firebase.firestore();
+  document.getElementById('cloud-indicator').innerHTML = '<span style="color:#86efac">●</span> Firestore Conectado (En vivo)';
+
+  // Escuchar cambios en Firestore en tiempo real
+  db.collection("eventos").doc("despedida_mercado").onSnapshot((doc) => {
+    if (doc.exists) {
+      appState = doc.data();
+      localStorage.setItem('libreta_mercado_firestore', JSON.stringify(appState));
+      renderApp();
+    }
+  }, (error) => {
+    console.warn("Modo local o permiso pendiente:", error);
+    document.getElementById('cloud-indicator').innerHTML = '<span style="color:#fde047">●</span> Modo Local';
+  });
+} catch (e) {
+  document.getElementById('cloud-indicator').innerHTML = '<span style="color:#fde047">●</span> Modo Local';
+}
+
+// ==========================================
+// 2. CONGREGACIÓN Y TELÉFONOS (A-Z)
+// ==========================================
+const FAMILIAS = [
+  { id: "H023", nombre: "Arteaga Rangel", grupo: "Grupo 1", miembros: [
+    { id: "P0034", nombre: "Oscar Enrique Arteaga Mendez", rol: "ANC, PR", parentesco: "Esposo",
+      telefonos: [
+        { tipo: "Principal", num: "3205692486", nota: "Móvil" },
+        { tipo: "Respaldo", num: "3245395674", nota: "Línea 2" },
+        { tipo: "Respaldo", num: "3005509232", nota: "Trabajo" }
+      ]
+    },
+    { id: "P0035", nombre: "Ana Fernanda Arteaga (Rangel Salazar)", rol: "PR", parentesco: "Esposa",
+      telefonos: [{ tipo: "Principal", num: "3015753270", nota: "Móvil" }]
+    }
+  ]},
+  { id: "H003", nombre: "Assia De La Rosa", grupo: "Grupo 5", miembros: [
+    { id: "P0005", nombre: "Libardo Enrique Assia Atencia", rol: "PUB", parentesco: "Esposo",
+      telefonos: [
+        { tipo: "Principal", num: "3107431541", nota: "Actual" },
+        { tipo: "Respaldo", num: "3023359755", nota: "Línea anterior" }
+      ]
+    },
+    { id: "P0006", nombre: "Filadelfa Assia (De La Rosa Mendoza)", rol: "PUB", parentesco: "Esposa",
+      telefonos: [{ tipo: "Principal", num: "3218638112", nota: "Móvil" }]
+    }
+  ]},
+  { id: "H031", nombre: "Barboza", grupo: "Grupo 1", miembros: [
+    { id: "P0047_B", nombre: "Arinda del Carmen Barboza (Portacio Sierra)", rol: "PUB", parentesco: "Otro",
+      telefonos: [
+        { tipo: "Principal", num: "3135908306", nota: "Móvil" },
+        { tipo: "Respaldo", num: "3216513526", nota: "Carmelo (Esposo)" }
+      ]
+    }
+  ]},
+  { id: "H041", nombre: "Cardenas Arrieta", grupo: "Grupo 3", miembros: [
+    { id: "P0062", nombre: "Luz Marina Cardenas Arrieta", rol: "PUB", parentesco: "Otro",
+      telefonos: [{ tipo: "Principal", num: "3232899714", nota: "Móvil" }]
+    }
+  ]},
+  { id: "H026", nombre: "Castro Perez", grupo: "Grupo 1", miembros: [
+    { id: "P0040", nombre: "Leiffer Jesus Castro Tovar", rol: "SM", parentesco: "Padre",
+      telefonos: [
+        { tipo: "Principal", num: "3164091356", nota: "Línea 1" },
+        { tipo: "Respaldo", num: "3023066175", nota: "Línea 2" }
+      ]
+    },
+    { id: "P0041", nombre: "Maria del Carmen Castro (Perez Quiroz)", rol: "PUB", parentesco: "Madre",
+      telefonos: [
+        { tipo: "Principal", num: "3176416870", nota: "Móvil" },
+        { tipo: "Respaldo", num: "3004184437", nota: "Trabajo" }
+      ]
+    },
+    { id: "P0047_C", nombre: "Nalieth Castro Pérez", rol: "Menor", parentesco: "Hija", telefonos: [] },
+    { id: "P0069", nombre: "Nathan Castro Perez", rol: "Menor", parentesco: "Hijo", telefonos: [] }
+  ]},
+  { id: "H020", nombre: "Diaz Cardenas", grupo: "Grupo 2", miembros: [
+    { id: "P0029", nombre: "Alfonso Manuel Diaz Cardenas", rol: "PUB", parentesco: "Soltero/a",
+      telefonos: [
+        { tipo: "Principal", num: "3009579577", nota: "Línea Los Palmitos" },
+        { tipo: "Respaldo", num: "3008110812", nota: "Reg. Sep 2026" },
+        { tipo: "Respaldo", num: "3226873745", nota: "Reg. Feb 2025" }
+      ]
+    }
+  ]},
+  { id: "H035", nombre: "Gelvez Hernandez", grupo: "Grupo 4", miembros: [
+    { id: "P0053", nombre: "Gabriel Gelvez", rol: "PUB", parentesco: "Padre",
+      telefonos: [{ tipo: "Principal", num: "3043134971", nota: "Yoelis" }]
+    },
+    { id: "P0054", nombre: "Yoelis Onice Gelvez (Hernandez)", rol: "PR", parentesco: "Madre",
+      telefonos: [{ tipo: "Principal", num: "3043134971", nota: "Móvil" }]
+    },
+    { id: "P0055", nombre: "Franyerlis Michel Hernandez", rol: "PNB", parentesco: "Hija", telefonos: [] }
+  ]},
+  { id: "H005", nombre: "Gomez", grupo: "Grupo 2", miembros: [
+    { id: "P0008", nombre: "Ligia Raquel Gomez (Wilches Diaz)", rol: "PUB", parentesco: "Otro",
+      telefonos: [
+        { tipo: "Principal", num: "3012331764", nota: "Llamadas" },
+        { tipo: "Respaldo", num: "3147013421", nota: "WhatsApp" }
+      ]
+    }
+  ]},
+  { id: "H037", nombre: "Gutierrez", grupo: "Grupo 3", miembros: [
+    { id: "P0057", nombre: "Yorlenis Gutierrez", rol: "PUB", parentesco: "Soltero/a",
+      telefonos: [{ tipo: "Principal", num: "3104688116", nota: "Móvil" }]
+    }
+  ]},
+  { id: "H024", nombre: "Hernandez Espina", grupo: "Grupo 5", miembros: [
+    { id: "P0036", nombre: "Jamer Joaquin Hernandez Perez", rol: "PUB", parentesco: "Padre",
+      telefonos: [
+        { tipo: "Principal", num: "3167992812", nota: "Móvil" },
+        { tipo: "Respaldo", num: "3142932156", nota: "Casa" }
+      ]
+    },
+    { id: "P0037", nombre: "Fabiola Cristina Hernandez (Espina Molina)", rol: "PR", parentesco: "Madre",
+      telefonos: [
+        { tipo: "Principal", num: "3142932156", nota: "Móvil" },
+        { tipo: "Respaldo", num: "3217654910", nota: "Línea 2" }
+      ]
+    },
+    { id: "P0038", nombre: "Jamer Arturo Hernandez Espina", rol: "PNB", parentesco: "Hijo",
+      telefonos: [
+        { tipo: "Principal", num: "3241893061", nota: "Reg. Jul 2024" },
+        { tipo: "Respaldo", num: "3239927496", nota: "Línea 2" }
+      ]
+    }
+  ]},
+  { id: "H022", nombre: "Julio Uribe", grupo: "Grupo 2", miembros: [
+    { id: "P0032", nombre: "Miguel Esteban Julio Alvarez", rol: "ANC, PR", parentesco: "Esposo",
+      telefonos: [
+        { tipo: "Principal", num: "3007402604", nota: "Tigo" },
+        { tipo: "Respaldo", num: "3114096919", nota: "Línea anterior" }
+      ]
+    },
+    { id: "P0033", nombre: "Esther Lucia Julio (Uribe Gonzalez)", rol: "PR", parentesco: "Esposa",
+      telefonos: [
+        { tipo: "Principal", num: "3003903807", nota: "Móvil" },
+        { tipo: "Respaldo", num: "3244444937", nota: "Trabajo" }
+      ]
+    }
+  ]},
+  { id: "H032", nombre: "Marquez Arias", grupo: "Grupo 5", miembros: [
+    { id: "P0048", nombre: "Felix de Jesus Marquez Cardenas", rol: "PUB", parentesco: "Esposo",
+      telefonos: [{ tipo: "Principal", num: "3204653196", nota: "Trabajo" }]
+    },
+    { id: "P0049", nombre: "Julia Isabel Marquez (Arias Cardenas)", rol: "PUB", parentesco: "Esposa",
+      telefonos: [{ tipo: "Principal", num: "3234343656", nota: "Móvil" }]
+    }
+  ]},
+  { id: "H014", nombre: "Mendez Assia", grupo: "Grupo 3", miembros: [
+    { id: "P0023", nombre: "Jaider de Jesus Mendez Assia", rol: "SM", parentesco: "Soltero/a",
+      telefonos: [
+        { tipo: "Principal", num: "3145267044", nota: "Los Palmitos" },
+        { tipo: "Respaldo", num: "3122702600", nota: "Línea 2" }
+      ]
+    }
+  ]},
+  { id: "H033", nombre: "Mendez Garizao", grupo: "Grupo 1", miembros: [
+    { id: "P0050", nombre: "Ester Maria Mendez Garizao", rol: "PUB", parentesco: "Otro",
+      telefonos: [
+        { tipo: "Principal", num: "3205242657", nota: "Línea 1" },
+        { tipo: "Respaldo", num: "3017297789", nota: "Línea 2" }
+      ]
+    }
+  ]},
+  { id: "H011", nombre: "Mendivil", grupo: "Grupo 4", miembros: [
+    { id: "P0018", nombre: "Mary Cruz Mendivil (Santos Herazo)", rol: "PUB", parentesco: "Madre",
+      telefonos: [
+        { tipo: "Principal", num: "3122574449", nota: "Línea 1" },
+        { tipo: "Respaldo", num: "3015039208", nota: "Línea 2" }
+      ]
+    }
+  ]},
+  { id: "H040", nombre: "Monterroza", grupo: "Grupo 1", miembros: [
+    { id: "P0061", nombre: "Sonia Monterroza", rol: "PUB", parentesco: "Otro",
+      telefonos: [{ tipo: "Principal", num: "3043905204", nota: "Móvil" }]
+    }
+  ]},
+  { id: "H021", nombre: "Perez Arrieta", grupo: "Grupo 4", miembros: [
+    { id: "P0030", nombre: "Rosario de Jesus Perez (Arrieta Marquez)", rol: "PR", parentesco: "Otro",
+      telefonos: [
+        { tipo: "Principal", num: "3205130074", nota: "Línea 1" },
+        { tipo: "Respaldo", num: "3024506901", nota: "Trabajo" }
+      ]
+    }
+  ]},
+  { id: "H008", nombre: "Perez Buelvas", grupo: "Grupo 3", miembros: [
+    { id: "P0013", nombre: "Elcy Edith Perez (Buelvas Cadena)", rol: "PUB", parentesco: "Madre",
+      telefonos: [{ tipo: "Principal", num: "3128047057", nota: "Móvil" }]
+    },
+    { id: "P0014", nombre: "Natali Perez Buelvas", rol: "PUB", parentesco: "Hija",
+      telefonos: [{ tipo: "Principal", num: "3137821527", nota: "Móvil" }]
+    }
+  ]},
+  { id: "H001", nombre: "Perez Florez", grupo: "Grupo 3", miembros: [
+    { id: "P0001", nombre: "Jesus Manuel Perez Quiroz", rol: "PUB", parentesco: "Padre",
+      telefonos: [
+        { tipo: "Principal", num: "3233824495", nota: "Actual" },
+        { tipo: "Respaldo", num: "3024615229", nota: "Línea 2" }
+      ]
+    },
+    { id: "P0002", nombre: "Esther Marina Perez (Florez Villalobos)", rol: "PUB", parentesco: "Madre",
+      telefonos: [
+        { tipo: "Principal", num: "3104964546", nota: "Línea 1" },
+        { tipo: "Respaldo", num: "3013732618", nota: "Trabajo" }
+      ]
+    },
+    { id: "P0047_1", nombre: "Emmanuel Perez Florez", rol: "Menor", parentesco: "Hijo", telefonos: [] }
+  ]},
+  { id: "H009", nombre: "Perez Gomez", grupo: "Grupo 5", miembros: [
+    { id: "P0015", nombre: "German Enrique Perez Quiroz", rol: "PUB", parentesco: "Esposo",
+      telefonos: [
+        { tipo: "Principal", num: "3218057576", nota: "Móvil" },
+        { tipo: "Respaldo", num: "3014081320", nota: "Línea 2" }
+      ]
+    },
+    { id: "P0016", nombre: "Gendys Perez (Gomez Buelvas)", rol: "PUB", parentesco: "Esposa",
+      telefonos: [{ tipo: "Principal", num: "3155361339", nota: "Móvil" }]
+    }
+  ]},
+  { id: "H010", nombre: "Perez Quiroz", grupo: "Grupo 2", miembros: [
+    { id: "P0017", nombre: "Ludys del Carmen Perez (Quiroz Gonzalez)", rol: "PUB", parentesco: "Otro",
+      telefonos: [
+        { tipo: "Principal", num: "3003785443", nota: "Línea 1" },
+        { tipo: "Respaldo", num: "3106637281", nota: "Línea 2" }
+      ]
+    }
+  ]},
+  { id: "H016", nombre: "Perez Yepez", grupo: "Grupo 2", miembros: [
+    { id: "P0025", nombre: "Yaquelin Elena Perez Yepez", rol: "PR", parentesco: "Soltero/a",
+      telefonos: [
+        { tipo: "Principal", num: "3023854075", nota: "Línea 1" },
+        { tipo: "Respaldo", num: "3142897902", nota: "Línea 2" }
+      ]
+    }
+  ]},
+  { id: "H019", nombre: "Prieto", grupo: "Grupo 2", miembros: [
+    { id: "P0028", nombre: "Beatriz Elena Prieto (Liñan Diaz)", rol: "PUB", parentesco: "Madre",
+      telefonos: [
+        { tipo: "Principal", num: "3234225474", nota: "Reg. Feb 2024" },
+        { tipo: "Respaldo", num: "3215955687", nota: "Rafael Prieto" }
+      ]
+    }
+  ]},
+  { id: "H012", nombre: "Quiroz Perez", grupo: "Grupo 3", miembros: [
+    { id: "P0019", nombre: "Jose Blas Quiroz Palacio", rol: "ANC", parentesco: "Esposo",
+      telefonos: [
+        { tipo: "Principal", num: "3217866210", nota: "Cel Nuevo" },
+        { tipo: "Respaldo", num: "3012688611", nota: "Anterior" }
+      ]
+    },
+    { id: "P0020", nombre: "Suleima Quiros (Perez Buelvas)", rol: "PUB", parentesco: "Esposa",
+      telefonos: [
+        { tipo: "Principal", num: "3023907197", nota: "Móvil" },
+        { tipo: "Respaldo", num: "3243141653", nota: "Línea 2" }
+      ]
+    }
+  ]},
+  { id: "H029", nombre: "Reales Regalado", grupo: "Grupo 2", miembros: [
+    { id: "P0045", nombre: "Tarcila Judith Reales Regalado", rol: "PUB", parentesco: "Otro",
+      telefonos: [{ tipo: "Principal", num: "3008470207", nota: "Móvil" }]
+    }
+  ]},
+  { id: "H002", nombre: "Revollo", grupo: "Grupo 2", miembros: [
+    { id: "P0003", nombre: "Lilibeth del Carmen Revollo Vergara", rol: "PR", parentesco: "Madre",
+      telefonos: [
+        { tipo: "Principal", num: "3243962798", nota: "Tigo" },
+        { tipo: "Respaldo", num: "3243954308", nota: "Trabajo" },
+        { tipo: "Respaldo", num: "3187800730", nota: "Línea 2" }
+      ]
+    },
+    { id: "P0004", nombre: "Michael Andres Martinez Revollo", rol: "PNB", parentesco: "Hijo",
+      telefonos: [
+        { tipo: "Principal", num: "3043190408", nota: "Línea 1" },
+        { tipo: "Respaldo", num: "3245815888", nota: "Línea 2" },
+        { tipo: "Respaldo", num: "3103686318", nota: "Datos" }
+      ]
+    }
+  ]},
+  { id: "H006", nombre: "Revollo Fuentes", grupo: "Grupo 2", miembros: [
+    { id: "P0009", nombre: "Arturo Rafael Revollo Fuentes", rol: "PUB", parentesco: "Esposo",
+      telefonos: [
+        { tipo: "Principal", num: "3157784584", nota: "Móvil" },
+        { tipo: "Respaldo", num: "3015583795", nota: "Tigo" }
+      ]
+    },
+    { id: "P0010", nombre: "Leticia del Carmen Revollo (Vergara Monterroza)", rol: "PUB", parentesco: "Esposa",
+      telefonos: [
+        { tipo: "Principal", num: "3012100621", nota: "Móvil" },
+        { tipo: "Respaldo", num: "3206161148", nota: "Línea 2" }
+      ]
+    }
+  ]},
+  { id: "H013", nombre: "Revollo Sierra", grupo: "Grupo 5", miembros: [
+    { id: "P0021", nombre: "Arturo Enrique Revollo Vergara", rol: "PUB", parentesco: "Esposo",
+      telefonos: [
+        { tipo: "Principal", num: "3002632162", nota: "WhatsApp" },
+        { tipo: "Respaldo", num: "3224962007", nota: "Claro" }
+      ]
+    },
+    { id: "P0022", nombre: "Amarys del Carmen Revollo (Sierra Granados)", rol: "PR", parentesco: "Esposa",
+      telefonos: [{ tipo: "Principal", num: "3166698517", nota: "Móvil" }]
+    },
+    { id: "P0058", nombre: "Aura de Jesus Sierra (Granados Mariano)", rol: "PUB", parentesco: "Otro",
+      telefonos: [{ tipo: "Principal", num: "3116032584", nota: "Móvil" }]
+    }
+  ]},
+  { id: "H025", nombre: "Rodriguez", grupo: "Grupo 3", miembros: [
+    { id: "P0039", nombre: "Alcira Luz Rodriguez (Perez Tovar)", rol: "PUB", parentesco: "Otro",
+      telefonos: [
+        { tipo: "Principal", num: "3206473916", nota: "Línea 1" },
+        { tipo: "Respaldo", num: "3004433991", nota: "Línea 2" }
+      ]
+    }
+  ]},
+  { id: "H039", nombre: "Salazar Rangel", grupo: "Grupo 1", miembros: [
+    { id: "P0059", nombre: "Digna Rosa Salazar Amaris", rol: "PR", parentesco: "Madre",
+      telefonos: [{ tipo: "Principal", num: "3054136796", nota: "Casa" }]
+    },
+    { id: "P0060", nombre: "Zaida Rangel Salazar", rol: "PR", parentesco: "Hija",
+      telefonos: [
+        { tipo: "Principal", num: "3145106429", nota: "Móvil" },
+        { tipo: "Respaldo", num: "3243997819", nota: "Trabajo" }
+      ]
+    }
+  ]},
+  { id: "H004", nombre: "Salgado", grupo: "Grupo 5", miembros: [
+    { id: "P0007", nombre: "Karina Rocio Salgado", rol: "PUB", parentesco: "Soltero/a",
+      telefonos: [{ tipo: "Principal", num: "3207311620", nota: "Móvil" }]
+    }
+  ]},
+  { id: "H018", nombre: "Sanchez Calderin", grupo: "Grupo 2", miembros: [
+    { id: "P0027", nombre: "Francisco Jose Sanchez Calderin", rol: "PUB", parentesco: "Soltero/a",
+      telefonos: [
+        { tipo: "Principal", num: "3208147611", nota: "Móvil" },
+        { tipo: "Respaldo", num: "3015516519", nota: "Casa" }
+      ]
+    }
+  ]},
+  { id: "H042", nombre: "Saumeth Sierra", grupo: "Grupo 4", miembros: [
+    { id: "P0063", nombre: "Luis Alberto Saumeth Manjarrez", rol: "ANC", parentesco: "Padre",
+      telefonos: [{ tipo: "Principal", num: "3003189103", nota: "Móvil" }]
+    },
+    { id: "P0064", nombre: "Nini Jhoana Saumeth (Sierra)", rol: "PUB", parentesco: "Madre",
+      telefonos: [{ tipo: "Principal", num: "3158781395", nota: "Móvil" }]
+    },
+    { id: "P0065", nombre: "Luis Miguel Saumeth Sierra", rol: "PUB", parentesco: "Hijo", telefonos: [] },
+    { id: "P0066", nombre: "Diego Saumeth", rol: "PNB", parentesco: "Hijo", telefonos: [] },
+    { id: "P0067", nombre: "Ricardo Saumeth", rol: "PNB", parentesco: "Hijo", telefonos: [] }
+  ]},
+  { id: "H017", nombre: "Severiche", grupo: "Grupo 4", miembros: [
+    { id: "P0026", nombre: "Sandra Luz Severiche (Dominguez Castellar)", rol: "PUB", parentesco: "Otro",
+      telefonos: [
+        { tipo: "Principal", num: "3008980407", nota: "Móvil" },
+        { tipo: "Respaldo", num: "3046342815", nota: "Hijo" }
+      ]
+    }
+  ]},
+  { id: "H007", nombre: "Sierra Meza", grupo: "Grupo 3", miembros: [
+    { id: "P0011", nombre: "Xavier Enrique Sierra Villamil", rol: "PUB", parentesco: "Padre",
+      telefonos: [
+        { tipo: "Principal", num: "3117106872", nota: "Móvil" },
+        { tipo: "Respaldo", num: "3248134978", nota: "Wom / Trabajo" }
+      ]
+    },
+    { id: "P0012", nombre: "Rose Estela Sierra (Meza Vitola)", rol: "PUB", parentesco: "Madre",
+      telefonos: [{ tipo: "Principal", num: "3122013577", nota: "Móvil" }]
+    },
+    { id: "P0048_1", nombre: "Lionel Sierra Meza", rol: "Menor", parentesco: "Hijo", telefonos: [] }
+  ]},
+  { id: "H027", nombre: "Sincelejo", grupo: "Grupo 1", miembros: [
+    { id: "P0042", nombre: "Danilce Senaida Sincelejo (Perez Barboza)", rol: "PUB", parentesco: "Otro",
+      telefonos: [
+        { tipo: "Principal", num: "3015315006", nota: "Móvil" },
+        { tipo: "Respaldo", num: "3002315843", nota: "Casa" }
+      ]
+    }
+  ]},
+  { id: "H015", nombre: "Tovar", grupo: "Grupo 1", miembros: [
+    { id: "P0024", nombre: "Amada Isabel Tovar NN", rol: "PUB", parentesco: "Otro",
+      telefonos: [
+        { tipo: "Principal", num: "3126769983", nota: "Móvil" },
+        { tipo: "Respaldo", num: "3167166897", nota: "Línea 2" },
+        { tipo: "Respaldo", num: "3108134403", nota: "Tablet" }
+      ]
+    }
+  ]},
+  { id: "H030", nombre: "Vergara", grupo: "Grupo 3", miembros: [
+    { id: "P0046_V", nombre: "Orledis del Carmen Vergara (Lobo Cuello)", rol: "PUB", parentesco: "Otro",
+      telefonos: [{ tipo: "Principal", num: "3114116925", nota: "Móvil" }]
+    }
+  ]},
+  { id: "H028", nombre: "Wilchez", grupo: "Grupo 1", miembros: [
+    { id: "P0043", nombre: "Adis Maria Wilchez Montes", rol: "PR", parentesco: "Madre",
+      telefonos: [
+        { tipo: "Principal", num: "3005425157", nota: "Línea 1" },
+        { tipo: "Respaldo", num: "3045695352", nota: "Línea 2" }
+      ]
+    }
+  ]}
+];
+
+const VISITANTES = [
+  { id: "H_VIS_1", nombre: "Mendivil (Visitante)", grupo: "-", miembros: [
+    { id: "P_VIS_1", nombre: "Diana Gabriela Mendivil", rol: "Visitante", parentesco: "Otro",
+      telefonos: [{ tipo: "Principal", num: "3145872137", nota: "Móvil" }]
+    }
+  ]},
+  { id: "H_VIS_2", nombre: "Manjarrez", grupo: "-", miembros: [
+    { id: "P_VIS_2", nombre: "Yolima Manjarrez", rol: "Visitante", parentesco: "Otro",
+      telefonos: [{ tipo: "Principal", num: "3170829398", nota: "Móvil" }]
+    }
+  ]},
+  { id: "H_VIS_3", nombre: "Garcia", grupo: "-", miembros: [
+    { id: "P_VIS_3", nombre: "Maura Garcia (estudiante)", rol: "Visitante", parentesco: "Estudiante",
+      telefonos: [{ tipo: "Principal", num: "3135351439", nota: "Móvil" }]
+    }
+  ]}
+];
+
+// ==========================================
+// 3. SINCRONIZACIÓN Y RENDER
+// ==========================================
+function syncData() {
+  localStorage.setItem('libreta_mercado_firestore', JSON.stringify(appState));
+  if (db) {
+    db.collection("eventos").doc("despedida_mercado").set(appState, { merge: true })
+      .then(() => showToast())
+      .catch((err) => console.error("Error al guardar en Firestore:", err));
+  } else {
+    showToast();
+  }
+  updateMetrics();
+}
+
+function showToast() {
+  const t = document.getElementById('toast');
+  t.style.display = 'block';
+  setTimeout(() => t.style.display = 'none', 1000);
+}
+
+function updateMetrics() {
+  let totalFam = FAMILIAS.length;
+  let totalPeople = 0, contacted = 0, yes = 0, maybe = 0, no = 0;
+
+  FAMILIAS.forEach(f => {
+    f.miembros.forEach(m => {
+      totalPeople++;
+      const s = appState[m.id] || {};
+      if (s.contacted) contacted++;
+      if (s.status === 'yes') yes++;
+      if (s.status === 'maybe') maybe++;
+      if (s.status === 'no') no++;
+    });
+  });
+
+  document.getElementById('st-fam').innerText = totalFam;
+  document.getElementById('st-total').innerText = totalPeople;
+  document.getElementById('st-contacted').innerText = contacted;
+  document.getElementById('st-yes').innerText = yes;
+  document.getElementById('st-maybe').innerText = maybe;
+  document.getElementById('st-no').innerText = no;
+}
+
+function renderApp() {
+  const q = document.getElementById('search').value.toLowerCase().trim();
+  const grp = document.getElementById('filter-group').value;
+  const mode = document.getElementById('view-mode').value;
+  const mainDiv = document.getElementById('main-content');
+  const visDiv = document.getElementById('visitors-content');
+  mainDiv.innerHTML = '';
+  visDiv.innerHTML = '';
+
+  const filtered = FAMILIAS.filter(f => {
+    const mGrp = (grp === 'ALL' || f.grupo === grp);
+    const mSearch = f.nombre.toLowerCase().includes(q) || f.miembros.some(m => {
+      const matchName = m.nombre.toLowerCase().includes(q);
+      const matchPhone = m.telefonos && m.telefonos.some(t => t.num.includes(q));
+      return matchName || matchPhone;
+    });
+    return mGrp && mSearch;
+  });
+
+  if (mode === 'GRUPOS') {
+    const listGroups = ['Grupo 1', 'Grupo 2', 'Grupo 3', 'Grupo 4', 'Grupo 5', '-'];
+    listGroups.forEach(gName => {
+      const subList = filtered.filter(f => f.grupo === gName);
+      if (subList.length > 0) {
+        const title = document.createElement('div');
+        title.className = 'section-title';
+        title.innerText = `📌 ${gName} (${subList.length} familias)`;
+        mainDiv.appendChild(title);
+        subList.forEach(f => mainDiv.appendChild(createCard(f, q)));
+      }
+    });
+  } else {
+    filtered.forEach(f => mainDiv.appendChild(createCard(f, q)));
+  }
+
+  const filteredVis = VISITANTES.filter(f => {
+    return f.nombre.toLowerCase().includes(q) || f.miembros.some(m => {
+      return m.nombre.toLowerCase().includes(q) || (m.telefonos && m.telefonos.some(t => t.num.includes(q)));
+    });
+  });
+  filteredVis.forEach(f => visDiv.appendChild(createCard(f, q, true)));
+
+  updateMetrics();
+}
+
+function createCard(fam, q, isVisitor = false) {
+  const card = document.createElement('div');
+  const allChecked = fam.miembros.every(m => (appState[m.id] && appState[m.id].contacted));
+  card.className = `family-card ${allChecked ? 'completed' : ''}`;
+
+  const head = document.createElement('div');
+  head.className = 'family-head';
+  head.innerHTML = `
+    <div class="family-name">
+      ${isVisitor ? '👤' : '🏠'} Familia ${fam.nombre}
+      <span class="badge badge-g">${fam.grupo}</span>
+      <span class="badge">${fam.miembros.length} ${fam.miembros.length === 1 ? 'persona' : 'personas'}</span>
+    </div>
+    <div>
+      <button class="btn-fam-toggle" onclick="toggleFamily('${fam.id}', ${!allChecked}, ${isVisitor})">
+        ${allChecked ? 'Desmarcar familia' : '✓ Avisar a todos'}
+      </button>
+    </div>
+  `;
+  card.appendChild(head);
+
+  const list = document.createElement('div');
+  list.className = 'member-list';
+
+  fam.miembros.forEach(m => {
+    if (q) {
+      const matchName = m.nombre.toLowerCase().includes(q) || fam.nombre.toLowerCase().includes(q);
+      const matchPhone = m.telefonos && m.telefonos.some(t => t.num.includes(q));
+      if (!matchName && !matchPhone) return;
+    }
+
+    const s = appState[m.id] || { contacted: false, status: 'pending', note: '' };
+    const row = document.createElement('div');
+    row.className = `member-row ${s.contacted ? 'is-contacted' : ''}`;
+
+    let phonesHtml = '';
+    if (m.telefonos && m.telefonos.length > 0) {
+      phonesHtml = '<div class="phones-container">';
+      m.telefonos.forEach(t => {
+        const clean = t.num.replace(/\D/g, '');
+        const waLink = clean ? `https://wa.me/57${clean.slice(-10)}` : '#';
+        const telLink = clean ? `tel:${clean}` : '#';
+        const isPri = t.tipo === 'Principal';
+
+        phonesHtml += `
+          <div class="phone-item">
+            <span class="phone-tag ${isPri ? 'primary' : 'alt'}">${isPri ? '★ ' + t.tipo : '↳ ' + t.tipo}</span>
+            <span class="phone-number">${t.num}</span>
+            <small style="color:var(--text-muted); font-size:0.7rem;">(${t.nota})</small>
+            ${clean ? `
+              <a href="${telLink}" class="btn-icon btn-call" title="Llamar a ${t.num}">📞</a>
+              <a href="${waLink}" target="_blank" class="btn-icon btn-wapp" title="WhatsApp a ${t.num}">💬</a>
+            ` : ''}
+          </div>
+        `;
+      });
+      phonesHtml += '</div>';
+    } else {
+      phonesHtml = '<span style="font-size:0.75rem; color:var(--text-muted);">Sin teléfono registrado</span>';
+    }
+
+    row.innerHTML = `
+      <div>
+        <input type="checkbox" ${s.contacted ? 'checked' : ''} onchange="togglePerson('${m.id}', this.checked)" title="Marcar como avisado">
+      </div>
+      <div>
+        <div class="member-name">${m.nombre}</div>
+        <div class="member-sub">${m.parentesco} • <b>${m.rol}</b></div>
+      </div>
+      <div>${phonesHtml}</div>
+      <div class="actions-box">
+        <select class="status-select" onchange="setStatus('${m.id}', this.value)">
+          <option value="pending" ${s.status === 'pending' ? 'selected' : ''}>⏳ Pendiente</option>
+          <option value="yes" ${s.status === 'yes' ? 'selected' : ''}>✅ Asiste</option>
+          <option value="maybe" ${s.status === 'maybe' ? 'selected' : ''}>🤔 En duda</option>
+          <option value="no" ${s.status === 'no' ? 'selected' : ''}>❌ No va</option>
+        </select>
+        <input type="text" class="note-input" placeholder="Aporte / detalle..." value="${s.note || ''}" onchange="setNote('${m.id}', this.value)">
+      </div>
+    `;
+    list.appendChild(row);
+  });
+
+  card.appendChild(list);
+  return card;
+}
+
+function togglePerson(id, val) {
+  if (!appState[id]) appState[id] = { status: 'pending', note: '' };
+  appState[id].contacted = val;
+  syncData();
+  renderApp();
+}
+
+function toggleFamily(fId, val, isVisitor) {
+  const source = isVisitor ? VISITANTES : FAMILIAS;
+  const fam = source.find(f => f.id === fId);
+  if (!fam) return;
+  fam.miembros.forEach(m => {
+    if (!appState[m.id]) appState[m.id] = { status: 'pending', note: '' };
+    appState[m.id].contacted = val;
+  });
+  syncData();
+  renderApp();
+}
+
+function setStatus(id, val) {
+  if (!appState[id]) appState[id] = { contacted: false, note: '' };
+  appState[id].status = val;
+  if (val !== 'pending') appState[id].contacted = true;
+  syncData();
+  renderApp();
+}
+
+function setNote(id, val) {
+  if (!appState[id]) appState[id] = { contacted: false, status: 'pending' };
+  appState[id].note = val;
+  syncData();
+}
+
+function copyWhatsAppSummary() {
+  let yesList = [];
+  let maybeList = [];
+  let confirmedPeople = 0;
+
+  FAMILIAS.forEach(f => {
+    f.miembros.forEach(m => {
+      const s = appState[m.id] || {};
+      if (s.status === 'yes') {
+        confirmedPeople++;
+        const noteStr = s.note ? ` (${s.note})` : '';
+        yesList.push(`• ${m.nombre} [Fam. ${f.nombre}]${noteStr}`);
+      } else if (s.status === 'maybe') {
+        maybeList.push(`• ${m.nombre} [Fam. ${f.nombre}]`);
+      }
+    });
+  });
+
+  let txt = `*REPORTE DESPEDIDA - HNO. WILLIAM MERCADO Y ESPOSA*\n\n`;
+  txt += `✅ *Confirmados que asisten:* ${confirmedPeople}\n\n`;
+  txt += `*Listado de Asistentes:*\n` + (yesList.length ? yesList.join('\n') : 'Ninguno aún') + `\n\n`;
+  if (maybeList.length > 0) {
+    txt += `🤔 *Por confirmar (${maybeList.length}):*\n` + maybeList.join('\n');
+  }
+
+  navigator.clipboard.writeText(txt).then(() => {
+    alert("¡Resumen copiado para WhatsApp al portapapeles!");
+  });
+}
+
+renderApp();
+</script>
+</body>
+</html>
