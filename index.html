@@ -22,11 +22,13 @@
       --green-bg: #f0fdf4;
       --green-border: #86efac;
       --yellow: #b45309;
+      --yellow-bg: #fefce8;
       --red: #b91c1c;
+      --red-bg: #fef2f2;
     }
     * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
     body { background-color: var(--bg); color: var(--text); margin: 0; padding: 12px; }
-    .container { max-width: 960px; margin: 0 auto; }
+    .container { max-width: 980px; margin: 0 auto; }
 
     header {
       background: linear-gradient(135deg, #1e3a8a, #2563eb);
@@ -41,19 +43,56 @@
       border-radius: 9999px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;
     }
 
-    /* Estadísticas */
+    /* Tarjetas Interactivas de Estadísticas (Filtros de 1 clic) */
     .stats-grid {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
-      gap: 8px; margin-bottom: 14px;
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(115px, 1fr));
+      gap: 8px; margin-bottom: 12px;
     }
     .stat-box {
       background: white; border: 1px solid var(--border); border-radius: 8px;
-      padding: 8px 10px; text-align: center; box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+      padding: 10px 8px; text-align: center; box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+      cursor: pointer; transition: all 0.2s ease; user-select: none;
     }
-    .stat-val { font-size: 1.25rem; font-weight: 700; color: var(--primary); }
-    .stat-lbl { font-size: 0.72rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; }
+    .stat-box:hover { transform: translateY(-2px); border-color: var(--primary-light); }
+    .stat-box.active {
+      border: 2px solid var(--primary-light);
+      background: #eff6ff;
+    }
+    .stat-val { font-size: 1.3rem; font-weight: 700; color: var(--primary); }
+    .stat-lbl { font-size: 0.72rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; margin-top: 2px; }
 
-    /* Controles */
+    /* Barra visual de progreso */
+    .progress-section {
+      background: white; border: 1px solid var(--border); border-radius: 8px;
+      padding: 10px 14px; margin-bottom: 14px; display: flex; flex-direction: column; gap: 6px;
+    }
+    .progress-bar-container {
+      height: 10px; background: #e2e8f0; border-radius: 5px; overflow: hidden; display: flex;
+    }
+    .progress-bar-fill {
+      height: 100%; transition: width 0.3s ease;
+    }
+    .progress-legend {
+      display: flex; justify-content: space-between; font-size: 0.75rem; font-weight: 600; color: var(--text-muted);
+    }
+
+    /* Caja de Aportes Consolidados */
+    .aportes-dashboard {
+      background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px;
+      padding: 10px 14px; margin-bottom: 14px; font-size: 0.85rem;
+    }
+    .aportes-dashboard-header {
+      font-weight: 700; color: #166534; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;
+    }
+    .aportes-tags {
+      display: flex; flex-wrap: wrap; gap: 6px;
+    }
+    .aporte-badge {
+      background: white; border: 1px solid #86efac; padding: 3px 8px; border-radius: 6px;
+      font-size: 0.78rem; color: #14532d; font-weight: 600;
+    }
+
+    /* Barra de herramientas */
     .toolbar {
       background: white; border: 1px solid var(--border); border-radius: 10px;
       padding: 10px; margin-bottom: 14px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
@@ -71,7 +110,7 @@
 
     /* Tarjetas de Familias */
     .section-title {
-      font-size: 1.1rem; font-weight: bold; color: #1e3a8a; margin: 22px 0 10px 0;
+      font-size: 1.1rem; font-weight: bold; color: #1e3a8a; margin: 20px 0 10px 0;
       display: flex; align-items: center; gap: 6px; border-bottom: 2px solid #bfdbfe; padding-bottom: 4px;
     }
     .family-card {
@@ -82,7 +121,6 @@
       border-color: var(--green-border); background-color: #fafdfb;
     }
     
-    /* Cabecera de Familia con Aporte Familiar */
     .family-head {
       background: #f1f5f9; padding: 10px 14px; border-bottom: 1px solid var(--border);
       display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;
@@ -116,6 +154,9 @@
     }
     .member-row:last-child { border-bottom: none; }
     .member-row.is-contacted { background: var(--green-bg); border-radius: 4px; }
+    .member-row.status-yes { border-left: 3px solid var(--green); padding-left: 6px; }
+    .member-row.status-maybe { border-left: 3px solid var(--yellow); padding-left: 6px; }
+    .member-row.status-no { border-left: 3px solid var(--red); padding-left: 6px; }
     .member-name { font-weight: 600; font-size: 0.88rem; }
     .member-sub { font-size: 0.72rem; color: var(--text-muted); }
 
@@ -163,28 +204,80 @@
   <header>
     <div>
       <h1>Despedida Hno. William Mercado y Esposa</h1>
-      <p>Control de Asistencia y Aportes Familiares (En vivo)</p>
+      <p>Control de Asistencia, Filtros y Aportes Familiares (En vivo)</p>
     </div>
     <div class="cloud-status" id="cloud-indicator">
       <span style="font-size:10px;">●</span> Conectando...
     </div>
   </header>
 
-  <!-- Métricas -->
+  <!-- Métricas Interactivas (Hacen de Filtro Rápido con 1 Clic) -->
   <div class="stats-grid">
-    <div class="stat-box"><div class="stat-val" id="st-fam">0</div><div class="stat-lbl">Familias</div></div>
-    <div class="stat-box"><div class="stat-val" id="st-total">0</div><div class="stat-lbl">Personas</div></div>
-    <div class="stat-box"><div class="stat-val" id="st-contacted">0</div><div class="stat-lbl">Avisados</div></div>
-    <div class="stat-box"><div class="stat-val" style="color:var(--green)" id="st-yes">0</div><div class="stat-lbl">Asistirán</div></div>
-    <div class="stat-box"><div class="stat-val" style="color:var(--yellow)" id="st-maybe">0</div><div class="stat-lbl">En duda</div></div>
-    <div class="stat-box"><div class="stat-val" style="color:var(--red)" id="st-no">0</div><div class="stat-lbl">No van</div></div>
+    <div class="stat-box active" id="btn-filtro-ALL" onclick="setQuickFilter('ALL')">
+      <div class="stat-val" id="st-fam">0</div>
+      <div class="stat-lbl">Familias</div>
+    </div>
+    <div class="stat-box" id="btn-filtro-PERSONAS" onclick="setQuickFilter('PERSONAS')">
+      <div class="stat-val" id="st-total">0</div>
+      <div class="stat-lbl">Personas</div>
+    </div>
+    <div class="stat-box" id="btn-filtro-AVISADOS" onclick="setQuickFilter('AVISADOS')">
+      <div class="stat-val" id="st-contacted">0</div>
+      <div class="stat-lbl">Avisados</div>
+    </div>
+    <div class="stat-box" id="btn-filtro-YES" onclick="setQuickFilter('YES')">
+      <div class="stat-val" style="color:var(--green)" id="st-yes">0</div>
+      <div class="stat-lbl">Asistirán</div>
+    </div>
+    <div class="stat-box" id="btn-filtro-MAYBE" onclick="setQuickFilter('MAYBE')">
+      <div class="stat-val" style="color:var(--yellow)" id="st-maybe">0</div>
+      <div class="stat-lbl">En duda</div>
+    </div>
+    <div class="stat-box" id="btn-filtro-NO" onclick="setQuickFilter('NO')">
+      <div class="stat-val" style="color:var(--red)" id="st-no">0</div>
+      <div class="stat-lbl">No van</div>
+    </div>
   </div>
 
-  <!-- Controles -->
+  <!-- Barra Visual de Estadísticas / Progreso de Cobertura -->
+  <div class="progress-section">
+    <div class="progress-legend">
+      <span>Avance de Invitaciones: <b id="prog-pct-contacted">0%</b> avisados</span>
+      <span>Confirmación: <b id="prog-pct-confirmed">0%</b> confirmaron asistencia</span>
+    </div>
+    <div class="progress-bar-container">
+      <div class="progress-bar-fill" id="bar-yes" style="background:#16a34a; width:0%;" title="Asistirán"></div>
+      <div class="progress-bar-fill" id="bar-maybe" style="background:#f59e0b; width:0%;" title="En duda"></div>
+      <div class="progress-bar-fill" id="bar-no" style="background:#ef4444; width:0%;" title="No van"></div>
+      <div class="progress-bar-fill" id="bar-pending" style="background:#cbd5e1; width:100%;" title="Pendientes"></div>
+    </div>
+  </div>
+
+  <!-- Panel Consolidado de Aportes de Comida / Refrigerios -->
+  <div class="aportes-dashboard" id="dashboard-aportes">
+    <div class="aportes-dashboard-header">
+      🍲 <b>Resumen General de Aportes Familiares Registrados:</b>
+    </div>
+    <div class="aportes-tags" id="lista-aportes-badges">
+      <span style="color:#64748b; font-size:0.75rem;">Cargando aportes...</span>
+    </div>
+  </div>
+
+  <!-- Controles Principales -->
   <div class="toolbar">
     <input type="text" id="search" placeholder="🔍 Buscar persona, familia, aporte o teléfono..." oninput="renderApp()">
+    
+    <select id="filtro-estado-select" onchange="setQuickFilter(this.value)">
+      <option value="ALL">Mostrar: Todos (Bloque completo)</option>
+      <option value="AVISADOS">Mostrar: Familias/Personas Avisadas</option>
+      <option value="YES">Mostrar: Solo los que Asistirán</option>
+      <option value="MAYBE">Mostrar: En duda (Por confirmar)</option>
+      <option value="NO">Mostrar: No van</option>
+      <option value="PENDING">Mostrar: Pendientes por avisar</option>
+    </select>
+
     <select id="filter-group" onchange="renderApp()">
-      <option value="ALL">Todos los grupos</option>
+      <option value="ALL">Todos los grupos de servicio</option>
       <option value="Grupo 1">Grupo 1</option>
       <option value="Grupo 2">Grupo 2</option>
       <option value="Grupo 3">Grupo 3</option>
@@ -192,14 +285,16 @@
       <option value="Grupo 5">Grupo 5</option>
       <option value="-">Sin grupo</option>
     </select>
+    
     <select id="view-mode" onchange="renderApp()">
-      <option value="BLOQUE">Bloque Entero (A-Z)</option>
-      <option value="GRUPOS">Separar por Grupos de Servicio</option>
+      <option value="BLOQUE">Vista: Bloque Entero (A-Z)</option>
+      <option value="GRUPOS">Vista: Agrupado por Grupo de Servicio</option>
     </select>
+    
     <button class="btn-action btn-wa" onclick="copyWhatsAppSummary()">📱 Resumen WhatsApp</button>
-    <button class="btn-action" onclick="exportData()">💾 Guardar Respaldo</button>
+    <button class="btn-action" onclick="exportData()">💾 Respaldo</button>
     <label class="btn-action" style="cursor:pointer; display:inline-flex; align-items:center;">
-      📂 Cargar Respaldo
+      📂 Cargar
       <input type="file" accept=".json" style="display:none" onchange="importData(event)">
     </label>
   </div>
@@ -228,7 +323,8 @@ const firebaseConfig = {
 };
 
 let db = null;
-let appState = JSON.parse(localStorage.getItem('libreta_mercado_firestore_v2')) || {};
+let currentQuickFilter = "ALL";
+let appState = JSON.parse(localStorage.getItem('libreta_mercado_firestore_v3')) || {};
 
 try {
   firebase.initializeApp(firebaseConfig);
@@ -238,7 +334,7 @@ try {
   db.collection("eventos").doc("despedida_mercado").onSnapshot((doc) => {
     if (doc.exists) {
       appState = doc.data();
-      localStorage.setItem('libreta_mercado_firestore_v2', JSON.stringify(appState));
+      localStorage.setItem('libreta_mercado_firestore_v3', JSON.stringify(appState));
       renderApp();
     }
   }, (error) => {
@@ -642,10 +738,24 @@ const VISITANTES = [
 ];
 
 // ==========================================
-// 3. SINCRONIZACIÓN Y RENDER
+// 3. CONTROL DE FILTROS Y ESTADÍSTICAS
 // ==========================================
+function setQuickFilter(filterKey) {
+  currentQuickFilter = filterKey;
+  
+  // Actualizar clases activas en los botones de arriba
+  document.querySelectorAll('.stat-box').forEach(b => b.classList.remove('active'));
+  const btn = document.getElementById('btn-filtro-' + filterKey);
+  if (btn) btn.classList.add('active');
+
+  const sel = document.getElementById('filtro-estado-select');
+  if (sel) sel.value = filterKey;
+
+  renderApp();
+}
+
 function syncData() {
-  localStorage.setItem('libreta_mercado_firestore_v2', JSON.stringify(appState));
+  localStorage.setItem('libreta_mercado_firestore_v3', JSON.stringify(appState));
   if (db) {
     db.collection("eventos").doc("despedida_mercado").set(appState, { merge: true })
       .then(() => showToast())
@@ -653,7 +763,7 @@ function syncData() {
   } else {
     showToast();
   }
-  updateMetrics();
+  updateMetricsAndAnalytics();
 }
 
 function showToast() {
@@ -662,11 +772,17 @@ function showToast() {
   setTimeout(() => t.style.display = 'none', 1000);
 }
 
-function updateMetrics() {
+function updateMetricsAndAnalytics() {
   let totalFam = FAMILIAS.length;
   let totalPeople = 0, contacted = 0, yes = 0, maybe = 0, no = 0;
+  let aportesEncontrados = [];
 
   FAMILIAS.forEach(f => {
+    const famAporte = (appState[f.id] && appState[f.id].familyNote) ? appState[f.id].familyNote.trim() : '';
+    if (famAporte) {
+      aportesEncontrados.push(`<b>Fam. ${f.nombre}:</b> ${famAporte}`);
+    }
+
     f.miembros.forEach(m => {
       totalPeople++;
       const s = appState[m.id] || {};
@@ -683,6 +799,31 @@ function updateMetrics() {
   document.getElementById('st-yes').innerText = yes;
   document.getElementById('st-maybe').innerText = maybe;
   document.getElementById('st-no').innerText = no;
+
+  // Cálculos de porcentajes y analítica
+  const pctContacted = totalPeople > 0 ? Math.round((contacted / totalPeople) * 100) : 0;
+  const pctConfirmed = totalPeople > 0 ? Math.round((yes / totalPeople) * 100) : 0;
+
+  document.getElementById('prog-pct-contacted').innerText = pctContacted + '%';
+  document.getElementById('prog-pct-confirmed').innerText = pctConfirmed + '%';
+
+  const wYes = (yes / totalPeople) * 100;
+  const wMaybe = (maybe / totalPeople) * 100;
+  const wNo = (no / totalPeople) * 100;
+  const wPending = 100 - (wYes + wMaybe + wNo);
+
+  document.getElementById('bar-yes').style.width = wYes + '%';
+  document.getElementById('bar-maybe').style.width = wMaybe + '%';
+  document.getElementById('bar-no').style.width = wNo + '%';
+  document.getElementById('bar-pending').style.width = Math.max(0, wPending) + '%';
+
+  // Render resumen de aportes
+  const badgesContainer = document.getElementById('lista-aportes-badges');
+  if (aportesEncontrados.length > 0) {
+    badgesContainer.innerHTML = aportesEncontrados.map(a => `<span class="aporte-badge">${a}</span>`).join('');
+  } else {
+    badgesContainer.innerHTML = '<span style="color:#64748b; font-size:0.75rem;">Aún no se han anotado aportes familiares.</span>';
+  }
 }
 
 function renderApp() {
@@ -697,12 +838,34 @@ function renderApp() {
   const filtered = FAMILIAS.filter(f => {
     const famNote = (appState[f.id] && appState[f.id].familyNote) ? appState[f.id].familyNote.toLowerCase() : '';
     const mGrp = (grp === 'ALL' || f.grupo === grp);
-    const mSearch = f.nombre.toLowerCase().includes(q) || famNote.includes(q) || f.miembros.some(m => {
+
+    // Filtro por texto
+    const matchSearch = f.nombre.toLowerCase().includes(q) || famNote.includes(q) || f.miembros.some(m => {
       const matchName = m.nombre.toLowerCase().includes(q);
       const matchPhone = m.telefonos && m.telefonos.some(t => t.num.includes(q));
       return matchName || matchPhone;
     });
-    return mGrp && mSearch;
+
+    if (!mGrp || !matchSearch) return false;
+
+    // Filtro rápido de Estado
+    if (currentQuickFilter === 'ALL' || currentQuickFilter === 'PERSONAS') return true;
+    if (currentQuickFilter === 'AVISADOS') {
+      return f.miembros.some(m => appState[m.id] && appState[m.id].contacted) || famNote.length > 0;
+    }
+    if (currentQuickFilter === 'YES') {
+      return f.miembros.some(m => appState[m.id] && appState[m.id].status === 'yes');
+    }
+    if (currentQuickFilter === 'MAYBE') {
+      return f.miembros.some(m => appState[m.id] && appState[m.id].status === 'maybe');
+    }
+    if (currentQuickFilter === 'NO') {
+      return f.miembros.some(m => appState[m.id] && appState[m.id].status === 'no');
+    }
+    if (currentQuickFilter === 'PENDING') {
+      return f.miembros.some(m => !appState[m.id] || !appState[m.id].contacted);
+    }
+    return true;
   });
 
   if (mode === 'GRUPOS') {
@@ -721,6 +884,7 @@ function renderApp() {
     filtered.forEach(f => mainDiv.appendChild(createCard(f, q)));
   }
 
+  // Visitantes
   const filteredVis = VISITANTES.filter(f => {
     return f.nombre.toLowerCase().includes(q) || f.miembros.some(m => {
       return m.nombre.toLowerCase().includes(q) || (m.telefonos && m.telefonos.some(t => t.num.includes(q)));
@@ -728,7 +892,7 @@ function renderApp() {
   });
   filteredVis.forEach(f => visDiv.appendChild(createCard(f, q, true)));
 
-  updateMetrics();
+  updateMetricsAndAnalytics();
 }
 
 function createCard(fam, q, isVisitor = false) {
@@ -747,7 +911,7 @@ function createCard(fam, q, isVisitor = false) {
       <span class="badge">${fam.miembros.length} ${fam.miembros.length === 1 ? 'persona' : 'personas'}</span>
     </div>
     <div class="family-actions-block">
-      <input type="text" class="family-note-input" placeholder="🍲 Aporte de la familia (arroz, carne, etc.)..." 
+      <input type="text" class="family-note-input" placeholder="🍲 Aporte familiar (arroz, carne, etc.)..." 
              value="${currentFamilyNote}" onchange="setFamilyNote('${fam.id}', this.value)">
       <button class="btn-fam-toggle" onclick="toggleFamily('${fam.id}', ${!allChecked}, ${isVisitor})">
         ${allChecked ? 'Desmarcar' : '✓ Avisar a todos'}
@@ -760,6 +924,14 @@ function createCard(fam, q, isVisitor = false) {
   list.className = 'member-list';
 
   fam.miembros.forEach(m => {
+    const s = appState[m.id] || { contacted: false, status: 'pending' };
+
+    // Filtro a nivel de integrante cuando se filtra por YES, MAYBE, NO o PENDING
+    if (currentQuickFilter === 'YES' && s.status !== 'yes') return;
+    if (currentQuickFilter === 'MAYBE' && s.status !== 'maybe') return;
+    if (currentQuickFilter === 'NO' && s.status !== 'no') return;
+    if (currentQuickFilter === 'PENDING' && s.contacted) return;
+
     if (q) {
       const famNote = (appState[fam.id] && appState[fam.id].familyNote) ? appState[fam.id].familyNote.toLowerCase() : '';
       const matchName = m.nombre.toLowerCase().includes(q) || fam.nombre.toLowerCase().includes(q) || famNote.includes(q);
@@ -767,9 +939,8 @@ function createCard(fam, q, isVisitor = false) {
       if (!matchName && !matchPhone) return;
     }
 
-    const s = appState[m.id] || { contacted: false, status: 'pending' };
     const row = document.createElement('div');
-    row.className = `member-row ${s.contacted ? 'is-contacted' : ''}`;
+    row.className = `member-row ${s.contacted ? 'is-contacted' : ''} status-${s.status || 'pending'}`;
 
     let phonesHtml = '';
     if (m.telefonos && m.telefonos.length > 0) {
@@ -874,7 +1045,6 @@ function copyWhatsAppSummary() {
       }
       familyReports.push(str);
     } else if (famAporte) {
-      // Si la familia aportó pero aún no confirman los miembros exactos
       aportesList.push(`• *Fam. ${f.nombre}:* ${famAporte}`);
     }
   });
@@ -918,6 +1088,7 @@ function importData(evt) {
   reader.readAsText(file);
 }
 
+// Inicializar al cargar
 renderApp();
 </script>
 </body>
