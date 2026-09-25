@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Despedida Hno. William Mercado y Esposa</title>
   
   <!-- Firebase SDKs -->
@@ -27,175 +27,201 @@
       --red-bg: #fef2f2;
     }
     * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-    body { background-color: var(--bg); color: var(--text); margin: 0; padding: 12px; }
+    body { background-color: var(--bg); color: var(--text); margin: 0; padding: 10px; }
     .container { max-width: 980px; margin: 0 auto; }
 
     header {
       background: linear-gradient(135deg, #1e3a8a, #2563eb);
-      color: white; padding: 16px 20px; border-radius: 12px; margin-bottom: 14px;
+      color: white; padding: 14px 16px; border-radius: 12px; margin-bottom: 12px;
       box-shadow: 0 4px 6px -1px rgba(0,0,0,0.08);
       display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;
     }
-    header h1 { margin: 0 0 4px 0; font-size: 1.35rem; }
-    header p { margin: 0; opacity: 0.9; font-size: 0.85rem; }
+    header h1 { margin: 0 0 2px 0; font-size: 1.25rem; }
+    header p { margin: 0; opacity: 0.9; font-size: 0.8rem; }
     .cloud-status {
-      background: rgba(255, 255, 255, 0.2); font-size: 0.75rem; padding: 4px 10px;
+      background: rgba(255, 255, 255, 0.2); font-size: 0.72rem; padding: 4px 10px;
       border-radius: 9999px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;
     }
 
-    /* Tarjetas Interactivas de Estadísticas (Filtros de 1 clic) */
+    /* Estadísticas Interactivas */
     .stats-grid {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(115px, 1fr));
-      gap: 8px; margin-bottom: 12px;
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 6px; margin-bottom: 10px;
+    }
+    @media (min-width: 600px) {
+      .stats-grid { grid-template-columns: repeat(6, 1fr); }
     }
     .stat-box {
       background: white; border: 1px solid var(--border); border-radius: 8px;
-      padding: 10px 8px; text-align: center; box-shadow: 0 1px 2px rgba(0,0,0,0.03);
-      cursor: pointer; transition: all 0.2s ease; user-select: none;
+      padding: 8px 4px; text-align: center; box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+      cursor: pointer; transition: all 0.15s ease; user-select: none;
     }
-    .stat-box:hover { transform: translateY(-2px); border-color: var(--primary-light); }
+    .stat-box:active { transform: scale(0.97); }
     .stat-box.active {
       border: 2px solid var(--primary-light);
       background: #eff6ff;
     }
-    .stat-val { font-size: 1.3rem; font-weight: 700; color: var(--primary); }
-    .stat-lbl { font-size: 0.72rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; margin-top: 2px; }
+    .stat-val { font-size: 1.2rem; font-weight: 700; color: var(--primary); }
+    .stat-lbl { font-size: 0.68rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; margin-top: 1px; }
 
-    /* Barra visual de progreso */
+    /* Barra de Progreso */
     .progress-section {
       background: white; border: 1px solid var(--border); border-radius: 8px;
-      padding: 10px 14px; margin-bottom: 14px; display: flex; flex-direction: column; gap: 6px;
+      padding: 8px 12px; margin-bottom: 12px; display: flex; flex-direction: column; gap: 5px;
     }
     .progress-bar-container {
-      height: 10px; background: #e2e8f0; border-radius: 5px; overflow: hidden; display: flex;
+      height: 8px; background: #e2e8f0; border-radius: 4px; overflow: hidden; display: flex;
     }
-    .progress-bar-fill {
-      height: 100%; transition: width 0.3s ease;
-    }
+    .progress-bar-fill { height: 100%; transition: width 0.3s ease; }
     .progress-legend {
-      display: flex; justify-content: space-between; font-size: 0.75rem; font-weight: 600; color: var(--text-muted);
+      display: flex; justify-content: space-between; font-size: 0.72rem; font-weight: 600; color: var(--text-muted);
     }
 
-    /* Caja de Aportes Consolidados */
+    /* Dashboard Aportes */
     .aportes-dashboard {
       background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px;
-      padding: 10px 14px; margin-bottom: 14px; font-size: 0.85rem;
+      padding: 10px 12px; margin-bottom: 12px; font-size: 0.82rem;
     }
     .aportes-dashboard-header {
       font-weight: 700; color: #166534; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;
     }
-    .aportes-tags {
-      display: flex; flex-wrap: wrap; gap: 6px;
-    }
+    .aportes-tags { display: flex; flex-wrap: wrap; gap: 5px; }
     .aporte-badge {
-      background: white; border: 1px solid #86efac; padding: 3px 8px; border-radius: 6px;
-      font-size: 0.78rem; color: #14532d; font-weight: 600;
+      background: white; border: 1px solid #86efac; padding: 3px 7px; border-radius: 6px;
+      font-size: 0.74rem; color: #14532d; font-weight: 600;
     }
 
-    /* Barra de herramientas */
+    /* Barra de herramientas móvil */
     .toolbar {
       background: white; border: 1px solid var(--border); border-radius: 10px;
-      padding: 10px; margin-bottom: 14px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+      padding: 10px; margin-bottom: 12px; display: flex; flex-direction: column; gap: 8px;
     }
-    .toolbar input, .toolbar select, .toolbar button {
-      padding: 8px 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 0.85rem;
+    .toolbar-row-top { display: flex; gap: 6px; width: 100%; }
+    .toolbar-row-top input {
+      flex: 1; padding: 8px 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 0.85rem;
     }
-    .toolbar input { flex: 1; min-width: 200px; }
+    .toolbar-row-filters {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 6px; width: 100%;
+    }
+    .toolbar-row-filters select {
+      padding: 8px 6px; border: 1px solid var(--border); border-radius: 6px; font-size: 0.8rem; background: white;
+    }
+    .toolbar-row-actions {
+      display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 6px; width: 100%;
+    }
     .btn-action {
-      background: #0284c7; color: white; border: none; font-weight: 600; cursor: pointer;
+      padding: 8px 6px; border: none; border-radius: 6px; font-size: 0.78rem; font-weight: 600;
+      color: white; text-align: center; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 4px;
     }
-    .btn-action:hover { background: #0369a1; }
     .btn-wa { background: #16a34a; }
-    .btn-wa:hover { background: #15803d; }
+    .btn-backup { background: #0284c7; }
+    .btn-restore { background: #475569; }
 
     /* Tarjetas de Familias */
     .section-title {
-      font-size: 1.1rem; font-weight: bold; color: #1e3a8a; margin: 20px 0 10px 0;
+      font-size: 1.05rem; font-weight: bold; color: #1e3a8a; margin: 18px 0 10px 0;
       display: flex; align-items: center; gap: 6px; border-bottom: 2px solid #bfdbfe; padding-bottom: 4px;
     }
     .family-card {
       background: var(--card); border: 1px solid var(--border); border-radius: 8px;
-      margin-bottom: 14px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      margin-bottom: 12px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.04);
     }
     .family-card.completed {
       border-color: var(--green-border); background-color: #fafdfb;
     }
     
     .family-head {
-      background: #f1f5f9; padding: 10px 14px; border-bottom: 1px solid var(--border);
-      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;
+      background: #f1f5f9; padding: 8px 10px; border-bottom: 1px solid var(--border);
+      display: flex; flex-direction: column; gap: 6px;
     }
-    .family-title-block { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
-    .family-name { font-weight: 700; font-size: 0.95rem; color: #0f172a; }
+    .family-title-block {
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 4px;
+    }
+    .family-name { font-weight: 700; font-size: 0.92rem; color: #0f172a; }
     .badge {
-      display: inline-block; padding: 2px 6px; font-size: 0.7rem; font-weight: 700; border-radius: 4px;
+      display: inline-block; padding: 2px 6px; font-size: 0.68rem; font-weight: 700; border-radius: 4px;
       background: #e2e8f0; color: #334155;
     }
     .badge-g { background: #dbeafe; color: #1e40af; }
     
-    .family-actions-block { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .family-actions-block {
+      display: flex; align-items: center; gap: 6px; width: 100%;
+    }
     .family-note-input {
-      padding: 5px 8px; font-size: 0.8rem; border-radius: 5px; border: 1px solid #94a3b8;
-      background: #ffffff; width: 230px; font-weight: 500; color: #1e3a8a;
+      flex: 1; padding: 6px 8px; font-size: 0.8rem; border-radius: 6px; border: 1px solid #94a3b8;
+      background: #ffffff; font-weight: 500; color: #1e3a8a;
     }
-    .family-note-input::placeholder { color: #94a3b8; font-weight: normal; }
-
     .btn-fam-toggle {
-      background: white; border: 1px solid #cbd5e1; border-radius: 4px;
-      padding: 5px 9px; font-size: 0.75rem; font-weight: 600; cursor: pointer; color: #334155;
+      background: white; border: 1px solid #cbd5e1; border-radius: 6px;
+      padding: 6px 10px; font-size: 0.74rem; font-weight: 600; cursor: pointer; color: #334155; white-space: nowrap;
     }
-    .btn-fam-toggle:hover { background: #e2e8f0; }
 
     /* Filas de Integrantes */
-    .member-list { padding: 4px 10px; }
+    .member-list { padding: 2px 8px; }
     .member-row {
-      display: grid; grid-template-columns: auto 1.3fr 1.6fr auto;
-      gap: 10px; align-items: center; padding: 8px 4px; border-bottom: 1px dashed #e2e8f0;
+      display: grid; grid-template-columns: auto 1fr;
+      gap: 6px 8px; align-items: center; padding: 8px 4px; border-bottom: 1px dashed #e2e8f0;
     }
     .member-row:last-child { border-bottom: none; }
     .member-row.is-contacted { background: var(--green-bg); border-radius: 4px; }
     .member-row.status-yes { border-left: 3px solid var(--green); padding-left: 6px; }
     .member-row.status-maybe { border-left: 3px solid var(--yellow); padding-left: 6px; }
     .member-row.status-no { border-left: 3px solid var(--red); padding-left: 6px; }
-    .member-name { font-weight: 600; font-size: 0.88rem; }
-    .member-sub { font-size: 0.72rem; color: var(--text-muted); }
+    
+    .member-checkbox { grid-row: span 2; }
+    .member-info { display: flex; flex-direction: column; }
+    .member-name { font-weight: 600; font-size: 0.85rem; }
+    .member-sub { font-size: 0.7rem; color: var(--text-muted); }
 
+    .member-details-cell {
+      grid-column: 2; display: flex; flex-direction: column; gap: 5px; margin-top: 2px;
+    }
     .phones-container { display: flex; flex-direction: column; gap: 3px; }
-    .phone-item { display: flex; align-items: center; gap: 5px; flex-wrap: wrap; }
+    .phone-item { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
     .phone-tag {
-      font-size: 0.68rem; font-weight: 700; padding: 2px 5px; border-radius: 3px;
+      font-size: 0.65rem; font-weight: 700; padding: 1px 4px; border-radius: 3px;
       background: #e2e8f0; color: #475569;
     }
     .phone-tag.primary { background: #dbeafe; color: #1e40af; }
     .phone-tag.alt { background: #fef3c7; color: #92400e; }
-    .phone-number { font-size: 0.82rem; font-weight: 600; color: #1e293b; }
+    .phone-number { font-size: 0.78rem; font-weight: 600; color: #1e293b; }
     
     .btn-icon {
       display: inline-flex; align-items: center; justify-content: center;
-      width: 24px; height: 24px; border-radius: 4px; font-size: 0.72rem; text-decoration: none;
+      width: 22px; height: 22px; border-radius: 4px; font-size: 0.7rem; text-decoration: none;
       color: white; border: none; cursor: pointer;
     }
     .btn-call { background: #0284c7; }
-    .btn-call:hover { background: #0369a1; }
     .btn-wapp { background: #16a34a; }
-    .btn-wapp:hover { background: #15803d; }
 
+    .actions-box { display: flex; align-items: center; gap: 6px; width: 100%; }
     .status-select {
-      padding: 5px 8px; font-size: 0.8rem; border-radius: 4px; border: 1px solid var(--border);
-      background: white; font-weight: 500;
+      flex: 1; padding: 5px 6px; font-size: 0.78rem; border-radius: 5px; border: 1px solid var(--border);
+      background: white; font-weight: 600;
     }
 
     #toast {
-      position: fixed; bottom: 16px; right: 16px; background: #1e293b; color: white;
-      padding: 8px 14px; border-radius: 6px; font-size: 0.82rem; display: none; z-index: 100;
+      position: fixed; bottom: 12px; right: 12px; background: #0f172a; color: white;
+      padding: 6px 12px; border-radius: 6px; font-size: 0.75rem; display: none; z-index: 100;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.15);
     }
 
-    @media (max-width: 768px) {
-      .member-row { grid-template-columns: auto 1fr; gap: 8px; }
-      .phones-container { grid-column: span 2; padding-left: 26px; }
-      .actions-box { grid-column: span 2; padding-left: 26px; }
-      .family-note-input { width: 100%; }
-      .family-actions-block { width: 100%; justify-content: space-between; }
+    /* En pantallas grandes (PC/Tablet) distribuir horizontalmente */
+    @media (min-width: 768px) {
+      .family-head { flex-direction: row; justify-content: space-between; }
+      .family-actions-block { width: auto; }
+      .family-note-input { width: 260px; }
+      .member-row {
+        grid-template-columns: auto 1.3fr 1.6fr 150px;
+      }
+      .member-checkbox { grid-row: auto; }
+      .member-details-cell {
+        grid-column: auto; flex-direction: row; align-items: center; justify-content: space-between;
+      }
+      .toolbar { flex-direction: row; }
+      .toolbar-row-top { width: auto; flex: 1; }
+      .toolbar-row-filters { width: auto; display: flex; }
+      .toolbar-row-actions { width: auto; display: flex; }
     }
   </style>
 </head>
@@ -204,14 +230,14 @@
   <header>
     <div>
       <h1>Despedida Hno. William Mercado y Esposa</h1>
-      <p>Control de Asistencia, Filtros y Aportes Familiares (En vivo)</p>
+      <p>Control de Asistencia y Aportes Familiares (Sincronizado)</p>
     </div>
     <div class="cloud-status" id="cloud-indicator">
       <span style="font-size:10px;">●</span> Conectando...
     </div>
   </header>
 
-  <!-- Métricas Interactivas (Hacen de Filtro Rápido con 1 Clic) -->
+  <!-- Métricas Interactivas (Filtros de un solo clic) -->
   <div class="stats-grid">
     <div class="stat-box active" id="btn-filtro-ALL" onclick="setQuickFilter('ALL')">
       <div class="stat-val" id="st-fam">0</div>
@@ -239,11 +265,11 @@
     </div>
   </div>
 
-  <!-- Barra Visual de Estadísticas / Progreso de Cobertura -->
+  <!-- Barra Visual de Progreso -->
   <div class="progress-section">
     <div class="progress-legend">
-      <span>Avance de Invitaciones: <b id="prog-pct-contacted">0%</b> avisados</span>
-      <span>Confirmación: <b id="prog-pct-confirmed">0%</b> confirmaron asistencia</span>
+      <span>Avance: <b id="prog-pct-contacted">0%</b> avisados</span>
+      <span>Confirmados: <b id="prog-pct-confirmed">0%</b> van</span>
     </div>
     <div class="progress-bar-container">
       <div class="progress-bar-fill" id="bar-yes" style="background:#16a34a; width:0%;" title="Asistirán"></div>
@@ -253,53 +279,51 @@
     </div>
   </div>
 
-  <!-- Panel Consolidado de Aportes de Comida / Refrigerios -->
+  <!-- Resumen de Aportes Familiares -->
   <div class="aportes-dashboard" id="dashboard-aportes">
     <div class="aportes-dashboard-header">
-      🍲 <b>Resumen General de Aportes Familiares Registrados:</b>
+      🍲 <b>Resumen General de Aportes Registrados:</b>
     </div>
     <div class="aportes-tags" id="lista-aportes-badges">
       <span style="color:#64748b; font-size:0.75rem;">Cargando aportes...</span>
     </div>
   </div>
 
-  <!-- Controles Principales -->
+  <!-- Barra de Herramientas Optimizada para Móvil -->
   <div class="toolbar">
-    <input type="text" id="search" placeholder="🔍 Buscar persona, familia, aporte o teléfono..." oninput="renderApp()">
-    
-    <select id="filtro-estado-select" onchange="setQuickFilter(this.value)">
-      <option value="ALL">Mostrar: Todos (Bloque completo)</option>
-      <option value="AVISADOS">Mostrar: Familias/Personas Avisadas</option>
-      <option value="YES">Mostrar: Solo los que Asistirán</option>
-      <option value="MAYBE">Mostrar: En duda (Por confirmar)</option>
-      <option value="NO">Mostrar: No van</option>
-      <option value="PENDING">Mostrar: Pendientes por avisar</option>
-    </select>
-
-    <select id="filter-group" onchange="renderApp()">
-      <option value="ALL">Todos los grupos de servicio</option>
-      <option value="Grupo 1">Grupo 1</option>
-      <option value="Grupo 2">Grupo 2</option>
-      <option value="Grupo 3">Grupo 3</option>
-      <option value="Grupo 4">Grupo 4</option>
-      <option value="Grupo 5">Grupo 5</option>
-      <option value="-">Sin grupo</option>
-    </select>
-    
-    <select id="view-mode" onchange="renderApp()">
-      <option value="BLOQUE">Vista: Bloque Entero (A-Z)</option>
-      <option value="GRUPOS">Vista: Agrupado por Grupo de Servicio</option>
-    </select>
-    
-    <button class="btn-action btn-wa" onclick="copyWhatsAppSummary()">📱 Resumen WhatsApp</button>
-    <button class="btn-action" onclick="exportData()">💾 Respaldo</button>
-    <label class="btn-action" style="cursor:pointer; display:inline-flex; align-items:center;">
-      📂 Cargar
-      <input type="file" accept=".json" style="display:none" onchange="importData(event)">
-    </label>
+    <div class="toolbar-row-top">
+      <input type="text" id="search" placeholder="🔍 Buscar persona, familia o aporte..." oninput="renderApp()">
+    </div>
+    <div class="toolbar-row-filters">
+      <select id="filtro-estado-select" onchange="setQuickFilter(this.value)">
+        <option value="ALL">📋 Mostrar: Todos</option>
+        <option value="AVISADOS">📞 Mostrar: Avisados</option>
+        <option value="YES">✅ Mostrar: Asistirán</option>
+        <option value="MAYBE">🤔 Mostrar: En duda</option>
+        <option value="NO">❌ Mostrar: No van</option>
+        <option value="PENDING">⏳ Mostrar: Pendientes</option>
+      </select>
+      <select id="filter-group" onchange="renderApp()">
+        <option value="ALL">Todos los grupos</option>
+        <option value="Grupo 1">Grupo 1</option>
+        <option value="Grupo 2">Grupo 2</option>
+        <option value="Grupo 3">Grupo 3</option>
+        <option value="Grupo 4">Grupo 4</option>
+        <option value="Grupo 5">Grupo 5</option>
+        <option value="-">Sin grupo</option>
+      </select>
+    </div>
+    <div class="toolbar-row-actions">
+      <button class="btn-action btn-wa" onclick="copyWhatsAppSummary()">📱 WhatsApp</button>
+      <button class="btn-action btn-backup" onclick="exportData()">💾 Respaldo</button>
+      <label class="btn-action btn-restore" style="cursor:pointer;">
+        📂 Cargar
+        <input type="file" accept=".json" style="display:none" onchange="importData(event)">
+      </label>
+    </div>
   </div>
 
-  <!-- Lista de Familias -->
+  <!-- Listado de Familias -->
   <div id="main-content"></div>
 
   <!-- Sección de Visitantes -->
@@ -307,11 +331,11 @@
   <div id="visitors-content"></div>
 </div>
 
-<div id="toast">Guardado en Firebase</div>
+<div id="toast">Guardado</div>
 
 <script>
 // ==========================================
-// 1. CONFIGURACIÓN FIREBASE FIRESTORE
+// 1. FIREBASE CON PERSISTENCIA OFFLINE
 // ==========================================
 const firebaseConfig = {
   apiKey: "AIzaSyBZDiv6G_TWpQL_NGmOfw4ldXbDb8Zz86A",
@@ -324,22 +348,44 @@ const firebaseConfig = {
 
 let db = null;
 let currentQuickFilter = "ALL";
-let appState = JSON.parse(localStorage.getItem('libreta_mercado_firestore_v3')) || {};
+let appState = JSON.parse(localStorage.getItem('libreta_mercado_local_cache')) || {};
 
 try {
   firebase.initializeApp(firebaseConfig);
   db = firebase.firestore();
-  document.getElementById('cloud-indicator').innerHTML = '<span style="color:#86efac">●</span> Firestore Conectado';
 
-  db.collection("eventos").doc("despedida_mercado").onSnapshot((doc) => {
+  // Habilitar persistencia offline en el navegador del teléfono
+  db.enablePersistence({ synchronizeTabs: true }).catch((err) => {
+    if (err.code === 'failed-precondition') {
+      console.warn("Persistencia abierta en múltiples pestañas.");
+    } else if (err.code === 'unimplemented') {
+      console.warn("Navegador no soporta persistencia offline.");
+    }
+  });
+
+  // Indicador de conexión
+  window.addEventListener('online', () => {
+    document.getElementById('cloud-indicator').innerHTML = '<span style="color:#86efac">●</span> Conectado (En vivo)';
+  });
+  window.addEventListener('offline', () => {
+    document.getElementById('cloud-indicator').innerHTML = '<span style="color:#fde047">●</span> Sin internet (Guardando local)';
+  });
+
+  if (navigator.onLine) {
+    document.getElementById('cloud-indicator').innerHTML = '<span style="color:#86efac">●</span> Conectado (En vivo)';
+  } else {
+    document.getElementById('cloud-indicator').innerHTML = '<span style="color:#fde047">●</span> Sin internet (Guardando local)';
+  }
+
+  // Escuchar Firestore en tiempo real (incluso desde caché offline)
+  db.collection("eventos").doc("despedida_mercado").onSnapshot({ includeMetadataChanges: true }, (doc) => {
     if (doc.exists) {
       appState = doc.data();
-      localStorage.setItem('libreta_mercado_firestore_v3', JSON.stringify(appState));
+      localStorage.setItem('libreta_mercado_local_cache', JSON.stringify(appState));
       renderApp();
     }
   }, (error) => {
-    console.warn("Modo local o permiso pendiente:", error);
-    document.getElementById('cloud-indicator').innerHTML = '<span style="color:#fde047">●</span> Modo Local';
+    console.warn("Modo local activo:", error);
   });
 } catch (e) {
   document.getElementById('cloud-indicator').innerHTML = '<span style="color:#fde047">●</span> Modo Local';
@@ -738,12 +784,27 @@ const VISITANTES = [
 ];
 
 // ==========================================
-// 3. CONTROL DE FILTROS Y ESTADÍSTICAS
+// 3. SINCRONIZACIÓN GRANULAR (SIN CONFLICTOS)
 // ==========================================
+function updateFieldInFirestore(key, value) {
+  // Actualización local inmediata
+  appState[key] = value;
+  localStorage.setItem('libreta_mercado_local_cache', JSON.stringify(appState));
+  showToast();
+  updateMetricsAndAnalytics();
+
+  // Envío a Firestore solo del campo modificado (Merge puntual)
+  if (db) {
+    db.collection("eventos").doc("despedida_mercado").set({
+      [key]: value
+    }, { merge: true }).catch((err) => {
+      console.warn("Dato en cola para enviar cuando vuelva internet:", err);
+    });
+  }
+}
+
 function setQuickFilter(filterKey) {
   currentQuickFilter = filterKey;
-  
-  // Actualizar clases activas en los botones de arriba
   document.querySelectorAll('.stat-box').forEach(b => b.classList.remove('active'));
   const btn = document.getElementById('btn-filtro-' + filterKey);
   if (btn) btn.classList.add('active');
@@ -752,18 +813,6 @@ function setQuickFilter(filterKey) {
   if (sel) sel.value = filterKey;
 
   renderApp();
-}
-
-function syncData() {
-  localStorage.setItem('libreta_mercado_firestore_v3', JSON.stringify(appState));
-  if (db) {
-    db.collection("eventos").doc("despedida_mercado").set(appState, { merge: true })
-      .then(() => showToast())
-      .catch((err) => console.error("Error al sincronizar con Firestore:", err));
-  } else {
-    showToast();
-  }
-  updateMetricsAndAnalytics();
 }
 
 function showToast() {
@@ -800,7 +849,6 @@ function updateMetricsAndAnalytics() {
   document.getElementById('st-maybe').innerText = maybe;
   document.getElementById('st-no').innerText = no;
 
-  // Cálculos de porcentajes y analítica
   const pctContacted = totalPeople > 0 ? Math.round((contacted / totalPeople) * 100) : 0;
   const pctConfirmed = totalPeople > 0 ? Math.round((yes / totalPeople) * 100) : 0;
 
@@ -817,7 +865,6 @@ function updateMetricsAndAnalytics() {
   document.getElementById('bar-no').style.width = wNo + '%';
   document.getElementById('bar-pending').style.width = Math.max(0, wPending) + '%';
 
-  // Render resumen de aportes
   const badgesContainer = document.getElementById('lista-aportes-badges');
   if (aportesEncontrados.length > 0) {
     badgesContainer.innerHTML = aportesEncontrados.map(a => `<span class="aporte-badge">${a}</span>`).join('');
@@ -829,7 +876,6 @@ function updateMetricsAndAnalytics() {
 function renderApp() {
   const q = document.getElementById('search').value.toLowerCase().trim();
   const grp = document.getElementById('filter-group').value;
-  const mode = document.getElementById('view-mode').value;
   const mainDiv = document.getElementById('main-content');
   const visDiv = document.getElementById('visitors-content');
   mainDiv.innerHTML = '';
@@ -839,7 +885,6 @@ function renderApp() {
     const famNote = (appState[f.id] && appState[f.id].familyNote) ? appState[f.id].familyNote.toLowerCase() : '';
     const mGrp = (grp === 'ALL' || f.grupo === grp);
 
-    // Filtro por texto
     const matchSearch = f.nombre.toLowerCase().includes(q) || famNote.includes(q) || f.miembros.some(m => {
       const matchName = m.nombre.toLowerCase().includes(q);
       const matchPhone = m.telefonos && m.telefonos.some(t => t.num.includes(q));
@@ -848,7 +893,6 @@ function renderApp() {
 
     if (!mGrp || !matchSearch) return false;
 
-    // Filtro rápido de Estado
     if (currentQuickFilter === 'ALL' || currentQuickFilter === 'PERSONAS') return true;
     if (currentQuickFilter === 'AVISADOS') {
       return f.miembros.some(m => appState[m.id] && appState[m.id].contacted) || famNote.length > 0;
@@ -868,21 +912,7 @@ function renderApp() {
     return true;
   });
 
-  if (mode === 'GRUPOS') {
-    const listGroups = ['Grupo 1', 'Grupo 2', 'Grupo 3', 'Grupo 4', 'Grupo 5', '-'];
-    listGroups.forEach(gName => {
-      const subList = filtered.filter(f => f.grupo === gName);
-      if (subList.length > 0) {
-        const title = document.createElement('div');
-        title.className = 'section-title';
-        title.innerText = `📌 ${gName} (${subList.length} familias)`;
-        mainDiv.appendChild(title);
-        subList.forEach(f => mainDiv.appendChild(createCard(f, q)));
-      }
-    });
-  } else {
-    filtered.forEach(f => mainDiv.appendChild(createCard(f, q)));
-  }
+  filtered.forEach(f => mainDiv.appendChild(createCard(f, q)));
 
   // Visitantes
   const filteredVis = VISITANTES.filter(f => {
@@ -911,7 +941,7 @@ function createCard(fam, q, isVisitor = false) {
       <span class="badge">${fam.miembros.length} ${fam.miembros.length === 1 ? 'persona' : 'personas'}</span>
     </div>
     <div class="family-actions-block">
-      <input type="text" class="family-note-input" placeholder="🍲 Aporte familiar (arroz, carne, etc.)..." 
+      <input type="text" class="family-note-input" placeholder="🍲 Aporte familiar..." 
              value="${currentFamilyNote}" onchange="setFamilyNote('${fam.id}', this.value)">
       <button class="btn-fam-toggle" onclick="toggleFamily('${fam.id}', ${!allChecked}, ${isVisitor})">
         ${allChecked ? 'Desmarcar' : '✓ Avisar a todos'}
@@ -926,7 +956,6 @@ function createCard(fam, q, isVisitor = false) {
   fam.miembros.forEach(m => {
     const s = appState[m.id] || { contacted: false, status: 'pending' };
 
-    // Filtro a nivel de integrante cuando se filtra por YES, MAYBE, NO o PENDING
     if (currentQuickFilter === 'YES' && s.status !== 'yes') return;
     if (currentQuickFilter === 'MAYBE' && s.status !== 'maybe') return;
     if (currentQuickFilter === 'NO' && s.status !== 'no') return;
@@ -955,35 +984,35 @@ function createCard(fam, q, isVisitor = false) {
           <div class="phone-item">
             <span class="phone-tag ${isPri ? 'primary' : 'alt'}">${isPri ? '★ ' + t.tipo : '↳ ' + t.tipo}</span>
             <span class="phone-number">${t.num}</span>
-            <small style="color:var(--text-muted); font-size:0.7rem;">(${t.nota})</small>
+            <small style="color:var(--text-muted); font-size:0.68rem;">(${t.nota})</small>
             ${clean ? `
-              <a href="${telLink}" class="btn-icon btn-call" title="Llamar a ${t.num}">📞</a>
-              <a href="${waLink}" target="_blank" class="btn-icon btn-wapp" title="WhatsApp a ${t.num}">💬</a>
+              <a href="${telLink}" class="btn-icon btn-call" title="Llamar">📞</a>
+              <a href="${waLink}" target="_blank" class="btn-icon btn-wapp" title="WhatsApp">💬</a>
             ` : ''}
           </div>
         `;
       });
       phonesHtml += '</div>';
-    } else {
-      phonesHtml = '<span style="font-size:0.75rem; color:var(--text-muted);">Sin teléfono</span>';
     }
 
     row.innerHTML = `
-      <div>
+      <div class="member-checkbox">
         <input type="checkbox" ${s.contacted ? 'checked' : ''} onchange="togglePerson('${m.id}', this.checked)" title="Marcar como avisado">
       </div>
-      <div>
-        <div class="member-name">${m.nombre}</div>
-        <div class="member-sub">${m.parentesco} • <b>${m.rol}</b></div>
+      <div class="member-info">
+        <span class="member-name">${m.nombre}</span>
+        <span class="member-sub">${m.parentesco} • <b>${m.rol}</b></span>
       </div>
-      <div>${phonesHtml}</div>
-      <div class="actions-box">
-        <select class="status-select" onchange="setStatus('${m.id}', this.value)">
-          <option value="pending" ${s.status === 'pending' ? 'selected' : ''}>⏳ Pendiente</option>
-          <option value="yes" ${s.status === 'yes' ? 'selected' : ''}>✅ Asiste</option>
-          <option value="maybe" ${s.status === 'maybe' ? 'selected' : ''}>🤔 En duda</option>
-          <option value="no" ${s.status === 'no' ? 'selected' : ''}>❌ No va</option>
-        </select>
+      <div class="member-details-cell">
+        ${phonesHtml}
+        <div class="actions-box">
+          <select class="status-select" onchange="setStatus('${m.id}', this.value)">
+            <option value="pending" ${s.status === 'pending' ? 'selected' : ''}>⏳ Pendiente</option>
+            <option value="yes" ${s.status === 'yes' ? 'selected' : ''}>✅ Asiste</option>
+            <option value="maybe" ${s.status === 'maybe' ? 'selected' : ''}>🤔 En duda</option>
+            <option value="no" ${s.status === 'no' ? 'selected' : ''}>❌ No va</option>
+          </select>
+        </div>
       </div>
     `;
     list.appendChild(row);
@@ -994,36 +1023,45 @@ function createCard(fam, q, isVisitor = false) {
 }
 
 function togglePerson(id, val) {
-  if (!appState[id]) appState[id] = { status: 'pending' };
-  appState[id].contacted = val;
-  syncData();
-  renderApp();
+  const current = appState[id] || { status: 'pending' };
+  current.contacted = val;
+  updateFieldInFirestore(id, current);
 }
 
 function toggleFamily(fId, val, isVisitor) {
   const source = isVisitor ? VISITANTES : FAMILIAS;
   const fam = source.find(f => f.id === fId);
   if (!fam) return;
+
+  const batchUpdates = {};
   fam.miembros.forEach(m => {
-    if (!appState[m.id]) appState[m.id] = { status: 'pending' };
-    appState[m.id].contacted = val;
+    const current = appState[m.id] || { status: 'pending' };
+    current.contacted = val;
+    appState[m.id] = current;
+    batchUpdates[m.id] = current;
   });
-  syncData();
+
+  localStorage.setItem('libreta_mercado_local_cache', JSON.stringify(appState));
+  showToast();
+  updateMetricsAndAnalytics();
   renderApp();
+
+  if (db) {
+    db.collection("eventos").doc("despedida_mercado").set(batchUpdates, { merge: true });
+  }
 }
 
 function setStatus(id, val) {
-  if (!appState[id]) appState[id] = { contacted: false };
-  appState[id].status = val;
-  if (val !== 'pending') appState[id].contacted = true;
-  syncData();
-  renderApp();
+  const current = appState[id] || { contacted: false };
+  current.status = val;
+  if (val !== 'pending') current.contacted = true;
+  updateFieldInFirestore(id, current);
 }
 
 function setFamilyNote(familyId, val) {
-  if (!appState[familyId]) appState[familyId] = {};
-  appState[familyId].familyNote = val.trim();
-  syncData();
+  const current = appState[familyId] || {};
+  current.familyNote = val.trim();
+  updateFieldInFirestore(familyId, current);
 }
 
 function copyWhatsAppSummary() {
@@ -1077,8 +1115,12 @@ function importData(evt) {
   const reader = new FileReader();
   reader.onload = function(e) {
     try {
-      appState = JSON.parse(e.target.result);
-      syncData();
+      const data = JSON.parse(e.target.result);
+      appState = data;
+      localStorage.setItem('libreta_mercado_local_cache', JSON.stringify(appState));
+      if (db) {
+        db.collection("eventos").doc("despedida_mercado").set(appState, { merge: true });
+      }
       renderApp();
       alert("¡Respaldo cargado y sincronizado con Firebase!");
     } catch(err) {
@@ -1088,7 +1130,6 @@ function importData(evt) {
   reader.readAsText(file);
 }
 
-// Inicializar al cargar
 renderApp();
 </script>
 </body>
