@@ -23,6 +23,7 @@
       --green-border: #86efac;
       --yellow: #b45309;
       --red: #b91c1c;
+      --purple: #6d28d9;
       --gold: #b45309;
       --gold-bg: #fffbeb;
       --gold-border: #fde68a;
@@ -44,13 +45,13 @@
       border-radius: 9999px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;
     }
 
-    /* Estadísticas */
+    /* Estadísticas interactivas */
     .stats-grid {
       display: grid; grid-template-columns: repeat(3, 1fr);
       gap: 6px; margin-bottom: 10px;
     }
     @media (min-width: 600px) {
-      .stats-grid { grid-template-columns: repeat(6, 1fr); }
+      .stats-grid { grid-template-columns: repeat(7, 1fr); }
     }
     .stat-box {
       background: white; border: 1px solid var(--border); border-radius: 8px;
@@ -62,8 +63,8 @@
       border: 2px solid var(--primary-light);
       background: #eff6ff;
     }
-    .stat-val { font-size: 1.2rem; font-weight: 700; color: var(--primary); }
-    .stat-lbl { font-size: 0.68rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; margin-top: 1px; }
+    .stat-val { font-size: 1.15rem; font-weight: 700; color: var(--primary); }
+    .stat-lbl { font-size: 0.65rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; margin-top: 1px; }
 
     /* Barra Visual de Progreso */
     .progress-section {
@@ -84,12 +85,17 @@
       padding: 10px 12px; margin-bottom: 12px; font-size: 0.82rem;
     }
     .aportes-dashboard-header {
-      font-weight: 700; color: #166534; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;
+      font-weight: 700; color: #166534; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 4px;
     }
     .aportes-tags { display: flex; flex-wrap: wrap; gap: 5px; }
     .aporte-badge {
-      background: white; border: 1px solid #86efac; padding: 3px 7px; border-radius: 6px;
-      font-size: 0.74rem; color: #14532d; font-weight: 600;
+      padding: 3px 8px; border-radius: 6px; font-size: 0.74rem; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;
+    }
+    .aporte-badge.received {
+      background: #dcfce7; border: 1px solid #86efac; color: #166534;
+    }
+    .aporte-badge.pending {
+      background: #fef9c3; border: 1px solid #fde047; color: #854d0e;
     }
 
     /* Barra de herramientas móvil */
@@ -124,27 +130,19 @@
       font-size: 1.05rem; font-weight: bold; color: #1e3a8a; margin: 18px 0 10px 0;
       display: flex; align-items: center; gap: 6px; border-bottom: 2px solid #bfdbfe; padding-bottom: 4px;
     }
-    .section-title.homenaje {
-      color: #92400e; border-color: #fde68a;
-    }
+    .section-title.homenaje { color: #92400e; border-color: #fde68a; }
     .family-card {
       background: var(--card); border: 1px solid var(--border); border-radius: 10px;
       margin-bottom: 12px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.04);
     }
-    .family-card.homenaje {
-      border: 2px solid #f59e0b; background: #fffdf5;
-    }
-    .family-card.completed {
-      border-color: var(--green-border); background-color: #fafdfb;
-    }
+    .family-card.homenaje { border: 2px solid #f59e0b; background: #fffdf5; }
+    .family-card.completed { border-color: var(--green-border); background-color: #fafdfb; }
     
     .family-head {
-      background: #f1f5f9; padding: 8px 10px; border-bottom: 1px solid var(--border);
-      display: flex; flex-direction: column; gap: 6px;
+      background: #f1f5f9; padding: 10px; border-bottom: 1px solid var(--border);
+      display: flex; flex-direction: column; gap: 8px;
     }
-    .family-head.homenaje {
-      background: #fef3c7; border-bottom: 1px solid #fde68a;
-    }
+    .family-head.homenaje { background: #fef3c7; border-bottom: 1px solid #fde68a; }
     .family-title-block {
       display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 4px;
     }
@@ -157,15 +155,26 @@
     .badge-gold { background: #fef08a; color: #854d0e; }
     
     .family-actions-block {
-      display: flex; align-items: center; gap: 6px; width: 100%;
+      display: flex; align-items: center; gap: 6px; width: 100%; flex-wrap: wrap;
     }
     .family-note-input {
-      flex: 1; padding: 6px 8px; font-size: 0.8rem; border-radius: 6px; border: 1px solid #94a3b8;
+      flex: 1; min-width: 170px; padding: 6px 8px; font-size: 0.8rem; border-radius: 6px; border: 1px solid #94a3b8;
       background: #ffffff; font-weight: 500; color: #1e3a8a;
     }
+    
+    /* Botón de Aporte Recibido */
+    .btn-received-toggle {
+      border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 9px; font-size: 0.74rem;
+      font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;
+      background: white; color: #64748b; white-space: nowrap;
+    }
+    .btn-received-toggle.is-received {
+      background: #dcfce7; border-color: #86efac; color: #15803d;
+    }
+
     .btn-fam-toggle {
       background: white; border: 1px solid #cbd5e1; border-radius: 6px;
-      padding: 6px 10px; font-size: 0.74rem; font-weight: 600; cursor: pointer; color: #334155; white-space: nowrap;
+      padding: 6px 9px; font-size: 0.74rem; font-weight: 600; cursor: pointer; color: #334155; white-space: nowrap;
     }
 
     /* Integrantes */
@@ -194,7 +203,6 @@
     .member-name { font-weight: 700; font-size: 0.88rem; color: #0f172a; line-height: 1.25; }
     .member-sub { font-size: 0.72rem; color: var(--text-muted); margin-top: 2px; }
 
-    /* Botones de acción rápida: Editar y Eliminar */
     .member-quick-tools {
       display: flex; align-items: center; gap: 4px; flex-shrink: 0;
     }
@@ -266,7 +274,7 @@
     @media (min-width: 768px) {
       .family-head { flex-direction: row; justify-content: space-between; }
       .family-actions-block { width: auto; }
-      .family-note-input { width: 260px; }
+      .family-note-input { width: 240px; }
       .toolbar { flex-direction: row; }
       .toolbar-row-top { width: auto; flex: 1; }
       .toolbar-row-filters { width: auto; display: flex; }
@@ -279,14 +287,14 @@
   <header>
     <div>
       <h1>Despedida Hno. William Mercado y Esposa</h1>
-      <p>Control de Asistencia y Aportes Familiares (Sincronizado)</p>
+      <p>Control de Asistencia y Recepción de Aportes (En vivo)</p>
     </div>
     <div class="cloud-status" id="cloud-indicator">
       <span style="font-size:10px;">●</span> Conectando...
     </div>
   </header>
 
-  <!-- Métricas Interactivas -->
+  <!-- Métricas Interactivas (Filtros de 1 toque) -->
   <div class="stats-grid">
     <div class="stat-box active" id="btn-filtro-ALL" onclick="setQuickFilter('ALL')">
       <div class="stat-val" id="st-fam">0</div>
@@ -308,17 +316,21 @@
       <div class="stat-val" style="color:var(--yellow)" id="st-maybe">0</div>
       <div class="stat-lbl">En duda</div>
     </div>
-    <div class="stat-box" id="btn-filtro-NO" onclick="setQuickFilter('NO')">
-      <div class="stat-val" style="color:var(--red)" id="st-no">0</div>
-      <div class="stat-lbl">No van</div>
+    <div class="stat-box" id="btn-filtro-RECIBIDOS" onclick="setQuickFilter('RECIBIDOS')">
+      <div class="stat-val" style="color:var(--green)" id="st-recibidos">0</div>
+      <div class="stat-lbl">📦 Recibidos</div>
+    </div>
+    <div class="stat-box" id="btn-filtro-PEND_APORTE" onclick="setQuickFilter('PEND_APORTE')">
+      <div class="stat-val" style="color:var(--yellow)" id="st-pend-aporte">0</div>
+      <div class="stat-lbl">⏳ Por recibir</div>
     </div>
   </div>
 
   <!-- Barra Visual de Progreso -->
   <div class="progress-section">
     <div class="progress-legend">
-      <span>Avance: <b id="prog-pct-contacted">0%</b> avisados</span>
-      <span>Confirmados: <b id="prog-pct-confirmed">0%</b> van</span>
+      <span>Avance Invitaciones: <b id="prog-pct-contacted">0%</b></span>
+      <span>Aportes Recibidos en Mano: <b id="prog-pct-aportes">0%</b></span>
     </div>
     <div class="progress-bar-container">
       <div class="progress-bar-fill" id="bar-yes" style="background:#16a34a; width:0%;" title="Asistirán"></div>
@@ -331,7 +343,7 @@
   <!-- Resumen de Aportes Familiares -->
   <div class="aportes-dashboard" id="dashboard-aportes">
     <div class="aportes-dashboard-header">
-      🍲 <b>Resumen General de Aportes Registrados:</b>
+      <span>🍲 <b>Aportes (📦 Verdes = Recibidos | ⏳ Amarillos = Por recibir):</b></span>
     </div>
     <div class="aportes-tags" id="lista-aportes-badges">
       <span style="color:#64748b; font-size:0.75rem;">Cargando aportes...</span>
@@ -350,7 +362,8 @@
         <option value="YES">✅ Mostrar: Asistirán</option>
         <option value="MAYBE">🤔 Mostrar: En duda</option>
         <option value="NO">❌ Mostrar: No van</option>
-        <option value="PENDING">⏳ Mostrar: Pendientes</option>
+        <option value="RECIBIDOS">📦 Mostrar: Aportes Recibidos</option>
+        <option value="PEND_APORTE">⏳ Mostrar: Aportes Pendientes</option>
       </select>
       <select id="filter-group" onchange="renderApp()">
         <option value="ALL">Todos los grupos</option>
@@ -904,7 +917,7 @@ const VISITANTES = [
 ];
 
 // ==========================================
-// 3. LÓGICA DE OVERRIDES (EDICIÓN Y ELIMINACIÓN)
+// 3. LÓGICA Y SINCRONIZACIÓN
 // ==========================================
 function updateFieldInFirestore(key, value) {
   appState[key] = value;
@@ -942,7 +955,7 @@ function showToast() {
 function applyPersonOverrides(member) {
   const overrides = (appState._person_overrides && appState._person_overrides[member.id]) || null;
   if (!overrides) return member;
-  if (overrides.deleted) return null; // Persona eliminada
+  if (overrides.deleted) return null;
 
   return {
     ...member,
@@ -976,7 +989,6 @@ function getAllFamilies() {
     }
   });
 
-  // Aplicar ediciones y filtrado de eliminados
   allFam.forEach(fam => {
     fam.miembros = fam.miembros.map(m => applyPersonOverrides(m)).filter(m => m !== null);
   });
@@ -1022,12 +1034,22 @@ function updateMetricsAndAnalytics() {
 
   let totalFam = allHomenajeados.length + allFamilies.length;
   let totalPeople = 0, contacted = 0, yes = 0, maybe = 0, no = 0;
+  let totalAportes = 0, recibidosCount = 0;
   let aportesEncontrados = [];
 
   combined.forEach(f => {
-    const famAporte = (appState[f.id] && appState[f.id].familyNote) ? appState[f.id].familyNote.trim() : '';
+    const famData = appState[f.id] || {};
+    const famAporte = famData.familyNote ? famData.familyNote.trim() : '';
+    const isReceived = !!famData.aporteRecibido;
+
     if (famAporte) {
-      aportesEncontrados.push(`<b>Fam. ${f.nombre}:</b> ${famAporte}`);
+      totalAportes++;
+      if (isReceived) recibidosCount++;
+      aportesEncontrados.push({
+        nombre: f.nombre,
+        aporte: famAporte,
+        recibido: isReceived
+      });
     }
 
     f.miembros.forEach(m => {
@@ -1045,13 +1067,14 @@ function updateMetricsAndAnalytics() {
   document.getElementById('st-contacted').innerText = contacted;
   document.getElementById('st-yes').innerText = yes;
   document.getElementById('st-maybe').innerText = maybe;
-  document.getElementById('st-no').innerText = no;
+  document.getElementById('st-recibidos').innerText = recibidosCount;
+  document.getElementById('st-pend-aporte').innerText = (totalAportes - recibidosCount);
 
   const pctContacted = totalPeople > 0 ? Math.round((contacted / totalPeople) * 100) : 0;
-  const pctConfirmed = totalPeople > 0 ? Math.round((yes / totalPeople) * 100) : 0;
+  const pctAportes = totalAportes > 0 ? Math.round((recibidosCount / totalAportes) * 100) : 0;
 
   document.getElementById('prog-pct-contacted').innerText = pctContacted + '%';
-  document.getElementById('prog-pct-confirmed').innerText = pctConfirmed + '%';
+  document.getElementById('prog-pct-aportes').innerText = pctAportes + '% (' + recibidosCount + '/' + totalAportes + ')';
 
   const wYes = totalPeople > 0 ? (yes / totalPeople) * 100 : 0;
   const wMaybe = totalPeople > 0 ? (maybe / totalPeople) * 100 : 0;
@@ -1065,7 +1088,11 @@ function updateMetricsAndAnalytics() {
 
   const badgesContainer = document.getElementById('lista-aportes-badges');
   if (aportesEncontrados.length > 0) {
-    badgesContainer.innerHTML = aportesEncontrados.map(a => `<span class="aporte-badge">${a}</span>`).join('');
+    badgesContainer.innerHTML = aportesEncontrados.map(a => `
+      <span class="aporte-badge ${a.recibido ? 'received' : 'pending'}">
+        ${a.recibido ? '📦' : '⏳'} <b>Fam. ${a.nombre}:</b> ${a.aporte}
+      </span>
+    `).join('');
   } else {
     badgesContainer.innerHTML = '<span style="color:#64748b; font-size:0.75rem;">Aún no se han anotado aportes familiares.</span>';
   }
@@ -1093,7 +1120,9 @@ function renderApp() {
 
   // 2. Familias Filtradas
   const filtered = allFamilies.filter(f => {
-    const famNote = (appState[f.id] && appState[f.id].familyNote) ? appState[f.id].familyNote.toLowerCase() : '';
+    const famData = appState[f.id] || {};
+    const famNote = famData.familyNote ? famData.familyNote.toLowerCase() : '';
+    const isReceived = !!famData.aporteRecibido;
     const mGrp = (grp === 'ALL' || f.grupo === grp);
 
     const matchSearch = f.nombre.toLowerCase().includes(q) || famNote.includes(q) || f.miembros.some(m => {
@@ -1117,8 +1146,11 @@ function renderApp() {
     if (currentQuickFilter === 'NO') {
       return f.miembros.some(m => appState[m.id] && appState[m.id].status === 'no');
     }
-    if (currentQuickFilter === 'PENDING') {
-      return f.miembros.some(m => !appState[m.id] || !appState[m.id].contacted);
+    if (currentQuickFilter === 'RECIBIDOS') {
+      return isReceived && famNote.length > 0;
+    }
+    if (currentQuickFilter === 'PEND_APORTE') {
+      return !isReceived && famNote.length > 0;
     }
     return true;
   });
@@ -1141,7 +1173,9 @@ function createCard(fam, q, isVisitor = false, isHomenaje = false) {
   const allChecked = fam.miembros.every(m => (appState[m.id] && appState[m.id].contacted));
   card.className = `family-card ${isHomenaje ? 'homenaje' : ''} ${allChecked ? 'completed' : ''}`;
 
-  const currentFamilyNote = (appState[fam.id] && appState[fam.id].familyNote) ? appState[fam.id].familyNote : '';
+  const famData = appState[fam.id] || {};
+  const currentFamilyNote = famData.familyNote || '';
+  const isAporteReceived = !!famData.aporteRecibido;
 
   const head = document.createElement('div');
   head.className = `family-head ${isHomenaje ? 'homenaje' : ''}`;
@@ -1154,8 +1188,15 @@ function createCard(fam, q, isVisitor = false, isHomenaje = false) {
       </div>
     </div>
     <div class="family-actions-block">
-      <input type="text" class="family-note-input" placeholder="${isHomenaje ? 'Nota especial de homenaje...' : '🍲 Aporte familiar...'}" 
+      <input type="text" class="family-note-input" placeholder="${isHomenaje ? 'Nota de homenaje...' : '🍲 Aporte familiar...'}" 
              value="${currentFamilyNote}" onchange="setFamilyNote('${fam.id}', this.value)">
+      ${!isHomenaje ? `
+        <button class="btn-received-toggle ${isAporteReceived ? 'is-received' : ''}" 
+                onclick="toggleAporteReceived('${fam.id}',${!isAporteReceived})"
+                title="Tocar para cambiar si ya se recibió o no el aporte">
+          ${isAporteReceived ? '📦 Recibido' : '⏳ Pendiente'}
+        </button>
+      ` : ''}
       <button class="btn-fam-toggle" onclick="toggleFamily('${fam.id}', ${!allChecked})">
         ${allChecked ? 'Desmarcar' : '✓ Avisar a todos'}
       </button>
@@ -1172,7 +1213,6 @@ function createCard(fam, q, isVisitor = false, isHomenaje = false) {
     if (currentQuickFilter === 'YES' && s.status !== 'yes') return;
     if (currentQuickFilter === 'MAYBE' && s.status !== 'maybe') return;
     if (currentQuickFilter === 'NO' && s.status !== 'no') return;
-    if (currentQuickFilter === 'PENDING' && s.contacted) return;
 
     if (q) {
       const famNote = (appState[fam.id] && appState[fam.id].familyNote) ? appState[fam.id].familyNote.toLowerCase() : '';
@@ -1218,8 +1258,8 @@ function createCard(fam, q, isVisitor = false, isHomenaje = false) {
           </div>
         </div>
         <div class="member-quick-tools">
-          <button class="btn-tool" onclick="openEditModal('${m.id}')" title="Editar datos">✏️</button>
-          <button class="btn-tool del" onclick="confirmDeletePerson('${m.id}', '${m.nombre.replace(/'/g, "\\'")}')" title="Eliminar de la lista">🗑️</button>
+          <button class="btn-tool" onclick="openEditModal('${m.id}')" title="Editar">✏️</button>
+          <button class="btn-tool del" onclick="confirmDeletePerson('${m.id}', '${m.nombre.replace(/'/g, "\\'")}')" title="Eliminar">🗑️</button>
         </div>
       </div>
       <div class="member-bottom-row">
@@ -1241,9 +1281,13 @@ function createCard(fam, q, isVisitor = false, isHomenaje = false) {
   return card;
 }
 
-// ==========================================
-// 4. FUNCIONES DE EDICIÓN Y ELIMINACIÓN
-// ==========================================
+// Control de Recepción de Aportes
+function toggleAporteReceived(familyId, val) {
+  const current = appState[familyId] || {};
+  current.aporteRecibido = val;
+  updateFieldInFirestore(familyId, current);
+}
+
 function findMemberById(memberId) {
   const combined = [...getHomenajeadosProcessed(), ...getAllFamilies(), ...getAllVisitors()];
   for (const f of combined) {
@@ -1313,11 +1357,8 @@ function confirmDeletePerson(memberId, memberName) {
   }
 
   const overrides = appState._person_overrides || {};
-  overrides[memberId] = {
-    deleted: true
-  };
+  overrides[memberId] = { deleted: true };
 
-  // Si tenía estado de asistencia, se limpia
   if (appState[memberId]) {
     appState[memberId].status = 'pending';
     appState[memberId].contacted = false;
@@ -1327,7 +1368,6 @@ function confirmDeletePerson(memberId, memberName) {
   renderApp();
 }
 
-// Modal y Gestión de Nuevas Personas
 function openAddModal() {
   const sel = document.getElementById('new-fam-select');
   sel.innerHTML = '';
@@ -1393,7 +1433,6 @@ function saveNewPerson() {
       member: newMemberObj
     };
   } else {
-    // Visitante
     const famName = document.getElementById('new-fam-name').value.trim() || personName;
     const newFamId = 'CUST_VIS_' + Date.now();
     recordPayload = {
@@ -1459,25 +1498,33 @@ function setFamilyNote(familyId, val) {
 function copyWhatsAppSummary() {
   let confirmedPeople = 0;
   let familyReports = [];
-  let aportesList = [];
+  let aportesRecibidos = [];
+  let aportesPendientes = [];
 
   const allCombined = [...getHomenajeadosProcessed(), ...getAllFamilies(), ...getAllVisitors()];
 
   allCombined.forEach(f => {
     const attendingMembers = f.miembros.filter(m => (appState[m.id] && appState[m.id].status === 'yes'));
-    const famAporte = (appState[f.id] && appState[f.id].familyNote) ? appState[f.id].familyNote.trim() : '';
+    const famData = appState[f.id] || {};
+    const famAporte = famData.familyNote ? famData.familyNote.trim() : '';
+    const isReceived = !!famData.aporteRecibido;
 
     if (attendingMembers.length > 0) {
       confirmedPeople += attendingMembers.length;
       let str = `*Familia ${f.nombre}* (${attendingMembers.length}):\n`;
       str += attendingMembers.map(m => `  • ${m.nombre}`).join('\n');
       if (famAporte) {
-        str += `\n  🍲 _Aporte:_ ${famAporte}`;
-        aportesList.push(`• *Fam. ${f.nombre}:* ${famAporte}`);
+        str += `\n  🍲 _Aporte:_ ${famAporte} (${isReceived ? '✅ RECIBIDO' : '⏳ PENDIENTE'})`;
       }
       familyReports.push(str);
-    } else if (famAporte) {
-      aportesList.push(`• *Fam. ${f.nombre}:* ${famAporte}`);
+    }
+
+    if (famAporte) {
+      if (isReceived) {
+        aportesRecibidos.push(`• *Fam. ${f.nombre}:* ${famAporte}`);
+      } else {
+        aportesPendientes.push(`• *Fam. ${f.nombre}:* ${famAporte}`);
+      }
     }
   });
 
@@ -1486,8 +1533,11 @@ function copyWhatsAppSummary() {
   txt += `📋 *DETALLE POR FAMILIAS CONFIRMADAS:*\n\n`;
   txt += familyReports.length ? familyReports.join('\n\n') : 'Ninguna familia confirmada aún.\n';
   
-  if (aportesList.length > 0) {
-    txt += `\n\n🍲 *RESUMEN DE APORTES / COMIDA:*\n\n` + aportesList.join('\n');
+  if (aportesRecibidos.length > 0) {
+    txt += `\n\n📦 *APORTES YA RECIBIDOS:*\n` + aportesRecibidos.join('\n');
+  }
+  if (aportesPendientes.length > 0) {
+    txt += `\n\n⏳ *APORTES PENDIENTES DE ENTREGA:*\n` + aportesPendientes.join('\n');
   }
 
   navigator.clipboard.writeText(txt).then(() => {
